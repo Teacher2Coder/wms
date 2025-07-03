@@ -1,0 +1,74 @@
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build output
+dist/
+build/
+out/
+
+# WMS.Api build output
+WMS.Api/bin/
+WMS.Api/obj/
+
+# Environment files
+.env
+.env.*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# User-specific files
+WMS.Api/.vs/
+WMS.Api/.vscode/
+WMS.Api/.idea/
+
+# Visual Studio/JetBrains Rider files
+WMS.Api/*.user
+WMS.Api/*.suo
+
+# OS generated files
+WMS.Api/.DS_Store
+WMS.Api/Thumbs.db
+
+# Logs and temp files
+logs/
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.orig
+*.cache
+*.pid
+*.seed
+*.tgz
+WMS.Api/*.log
+WMS.Api/*.tmp
+WMS.Api/*.bak
+WMS.Api/*.swp
+WMS.Api/*.swo
+WMS.Api/*.orig
+WMS.Api/*.cache
+WMS.Api/*.pid
+WMS.Api/*.seed
+WMS.Api/*.tgz
+
+# Test coverage
+coverage/
+WMS.Api/coverage/
+
+# Test results
+WMS.Api/TestResults/
+
+# Lock files (optional)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# npm/yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

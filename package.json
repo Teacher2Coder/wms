@@ -1,0 +1,28 @@
+{
+  "name": "wms",
+  "version": "1.0.0",
+  "description": "Warehouse management system",
+  "main": "main.jsx",
+  "scripts": {
+    "dev": "concurrently \"cd WMS.Api && dotnet run\" \"cd wms-client && npm run start\"",
+    "build": "concurrently \"cd WMS.Api && dotnet build\" \"cd wms-client && npm run build\"",
+    "install-client": "cd wms-client && npm install",
+    "install-api": "cd WMS.Api && dotnet restore",
+    "test-client": "echo \"Error: no test specified\" && exit 1",
+    "test-api": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Teacher2Coder/wms.git"
+  },
+  "author": "Teacher2Coder",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Teacher2Coder/wms/issues"
+  },
+  "homepage": "https://github.com/Teacher2Coder/wms#readme",
+  "dependencies": {
+    "concurrently": "^9.2.0",
+    "killport": "^1.0.2"
+  }
+}
