@@ -4,8 +4,9 @@
   "description": "Warehouse management system",
   "main": "main.jsx",
   "scripts": {
-    "dev": "concurrently \"cd WMS.Api && dotnet run\" \"cd wms-client && npm run start\"",
+    "dev": "concurrently \"cd WMS.Api && dotnet watch --launch-profile https\" \"cd wms-client && npm run dev\"",
     "build": "concurrently \"cd WMS.Api && dotnet build\" \"cd wms-client && npm run build\"",
+    "install": "npm run install-client",
     "install-client": "cd wms-client && npm install",
     "install-api": "cd WMS.Api && dotnet restore",
     "test-client": "echo \"Error: no test specified\" && exit 1",

@@ -1,41 +1,113 @@
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
+using WMS.Api.DbContexts;
+using WMS.Api.Services;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+if (environment == Environments.Development)
+{
+  builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+  );
+}
+else
+{
+  builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.ApplicationInsights(
+      new TelemetryConfiguration()
+      {
+        InstrumentationKey = builder.Configuration["ApplicationInsights:InstrumentationKey"]
+      },
+      TelemetryConverter.Traces
+    )
+  );
+}
+
+builder.Services.AddControllers(options =>
+{
+  options.ReturnHttpNotAcceptable = true;
+}).AddNewtonsoftJson()
+.AddXmlDataContractSerializerFormatters();
+
+builder.Services.AddProblemDetails();
+
+builder.Services.AddDbContext<WarehouseContext>(
+    dbContextOptions => dbContextOptions.UseNpgsql(
+    builder.Configuration["ConnectionStrings:WarehouseDBConnectionString"]
+  )
+);
+
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowReactApp", policy =>
+  {
+    policy.WithOrigins(builder.Configuration["ReactAppUrl"])
+      .AllowAnyHeader()
+      .AllowAnyMethod();
+  });
+});
+
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+  app.UseExceptionHandler();
 }
+
+app.UseForwardedHeaders();
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+// Configure static files to serve the React app (only if dist folder exists)
+var clientDistPath = Path.Combine(builder.Environment.ContentRootPath, "..", "wms-client", "dist");
+if (Directory.Exists(clientDistPath))
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+  app.UseStaticFiles(new StaticFileOptions
+  {
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(clientDistPath),
+    RequestPath = ""
+  });
+}
 
-app.MapGet("/weatherforecast", () =>
+app.UseRouting();
+
+// Use CORS
+app.UseCors("AllowReactApp");
+
+app.MapControllers();
+
+// SPA fallback - serve index.html for any non-API routes (only if dist folder exists)
+if (Directory.Exists(clientDistPath))
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+  app.MapFallbackToFile("index.html", new StaticFileOptions
+  {
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(clientDistPath)
+  });
+}
+else
+{
+  Log.Warning("React app dist folder not found at {DistPath}. Run 'npm run build' in wms-client to build the React app.", clientDistPath);
+}
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

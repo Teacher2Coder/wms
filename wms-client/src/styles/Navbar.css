@@ -1,0 +1,11 @@
+.mobile-menu-item:hover {
+  transform: translateX(4px);
+}
+
+.header-text {
+  background: linear-gradient(135deg, #4169e1 0%, #7a94ff 50%, #a3bdff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
