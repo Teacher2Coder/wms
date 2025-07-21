@@ -6,7 +6,5 @@ public enum ItemStatus
   Reserved,
   InTransit,
   Damaged,
-  Expired,
-  OutOfStock,
-  LowStock,
+  Expired
 }

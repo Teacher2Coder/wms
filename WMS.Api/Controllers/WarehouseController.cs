@@ -30,4 +30,17 @@ public class WarehouseController : ControllerBase
     var warehouseDtos = _mapper.Map<IEnumerable<WarehouseDto>>(warehouses);
     return Ok(warehouseDtos);
   }
+
+  [HttpGet("{id}")]
+  public async Task<IActionResult> GetWarehouse(int id)
+  {
+    var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(id);
+    if (warehouse == null)
+    {
+      return NotFound();
+    }
+
+    var warehouseDto = _mapper.Map<WarehouseDto>(warehouse);
+    return Ok(warehouseDto);
+  }
 }

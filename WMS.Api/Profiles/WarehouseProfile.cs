@@ -13,8 +13,6 @@ public class WarehouseProfile : Profile
       .ForMember(dest => dest.ReservedInventory, opt => opt.Ignore())
       .ForMember(dest => dest.InTransitInventory, opt => opt.Ignore())
       .ForMember(dest => dest.DamagedInventory, opt => opt.Ignore())
-      .ForMember(dest => dest.ExpiredInventory, opt => opt.Ignore())
-      .ForMember(dest => dest.OutOfStockInventory, opt => opt.Ignore())
-      .ForMember(dest => dest.LowStockInventory, opt => opt.Ignore());
+      .ForMember(dest => dest.ExpiredInventory, opt => opt.Ignore());
   }
 }

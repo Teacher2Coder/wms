@@ -86,22 +86,22 @@ public class WarehouseContext : DbContext
 
     modelBuilder.Entity<Item>()
       .HasData(
-        new Item(1) { Id = 1 },
-        new Item(2) { Id = 2 },
-        new Item(3) { Id = 3 },
-        new Item(4) { Id = 4 },
-        new Item(1) { Id = 5 },
-        new Item(2) { Id = 6 },
-        new Item(3) { Id = 7 },
-        new Item(4) { Id = 8 },
-        new Item(1) { Id = 9 },
-        new Item(2) { Id = 10 },
-        new Item(3) { Id = 11 },
-        new Item(4) { Id = 12 },
-        new Item(1) { Id = 13 },
-        new Item(2) { Id = 14 },
-        new Item(3) { Id = 15 },
-        new Item(4) { Id = 16 }
+        new Item(1, "SKU001") { Id = 1, SerialNumber = "SKU001-1" },
+        new Item(2, "SKU002") { Id = 2, SerialNumber = "SKU002-2" },
+        new Item(3, "SKU003") { Id = 3, SerialNumber = "SKU003-3" },
+        new Item(4, "SKU004") { Id = 4, SerialNumber = "SKU004-4" },
+        new Item(1, "SKU001") { Id = 5, SerialNumber = "SKU001-5" },
+        new Item(2, "SKU002") { Id = 6, SerialNumber = "SKU002-6" },
+        new Item(3, "SKU003") { Id = 7, SerialNumber = "SKU003-7" },
+        new Item(4, "SKU004") { Id = 8, SerialNumber = "SKU004-8" },
+        new Item(1, "SKU001") { Id = 9, SerialNumber = "SKU001-9" },
+        new Item(2, "SKU002") { Id = 10, SerialNumber = "SKU002-10" },
+        new Item(3, "SKU003") { Id = 11, SerialNumber = "SKU003-11" },
+        new Item(4, "SKU004") { Id = 12, SerialNumber = "SKU004-12" },
+        new Item(1, "SKU001") { Id = 13, SerialNumber = "SKU001-13" },
+        new Item(2, "SKU002") { Id = 14, SerialNumber = "SKU002-14" },
+        new Item(3, "SKU003") { Id = 15, SerialNumber = "SKU003-15" },
+        new Item(4, "SKU004") { Id = 16, SerialNumber = "SKU004-16" }
       );
     base.OnModelCreating(modelBuilder);
   }

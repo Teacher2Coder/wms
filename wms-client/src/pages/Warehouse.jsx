@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Overview from '../components/warehouse/Overview';
+import Sections from '../components/warehouse/Sections';
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -20,15 +22,36 @@ const Warehouse = () => {
     }
   }
 
+  console.log(warehouse);
+
   useEffect(() => {
     fetchWarehouse();
   }, [id]);
   
-  console.log(warehouse);
-  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!warehouse) {
+    return <div>Warehouse not found</div>;
+  }
+
   return (
     <div>
-      <h1>Warehouse {id}</h1>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3 }}
+        className="container mx-auto px-4 py-8"
+      >
+        <h1 className="text-3xl font-bold text-accent-800 mb-4">Warehouse: {warehouse.name}</h1>
+        <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
+        <div className="align-center">
+          <Overview warehouse={warehouse} />
+        </div>
+      </motion.div>
+      <Sections sections={warehouse.sections} warehouseId={warehouse.id} />
     </div>
   )
 }

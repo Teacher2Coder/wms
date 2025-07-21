@@ -22,6 +22,8 @@ public class Product
 
   public Section? Section { get; set; }
 
+  public ICollection<Item> Items { get; set; } = new List<Item>();
+
   public Product(string sku, int sectionId)
   {
     Sku = sku;

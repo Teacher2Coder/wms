@@ -18,6 +18,62 @@ public class WarehouseRepository : IWarehouseRepository
   {
     return await _context.Warehouses
       .Include(w => w.Sections)
+        .ThenInclude(s => s.Products)
+          .ThenInclude(p => p.Items)
       .ToListAsync();
+  }
+
+  public async Task<Warehouse?> GetWarehouseByIdAsync(int id)
+  {
+    return await _context.Warehouses
+      .Include(w => w.Sections)
+        .ThenInclude(s => s.Products)
+          .ThenInclude(p => p.Items)
+      .FirstOrDefaultAsync(w => w.Id == id);
+  }
+
+  public async Task<Section?> GetSectionByIdAsync(int id)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<Product?> GetProductByIdAsync(int id)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<Item?> GetItemByIdAsync(int id)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<IEnumerable<Section>> GetSectionsByWarehouseIdAsync(int warehouseId)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<IEnumerable<Product>> GetProductsBySectionIdAsync(int sectionId)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<IEnumerable<Item>> GetItemsByProductIdAsync(int productId)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<IEnumerable<Item>> GetItemsBySectionIdAsync(int sectionId)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<IEnumerable<Item>> GetItemsByWarehouseIdAsync(int warehouseId)
+  {
+    throw new NotImplementedException();
+  }
+
+  public async Task<bool> SaveChangesAsync()
+  {
+    return await _context.SaveChangesAsync() >= 0;
   }
 }
