@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Overview from '../components/warehouse/Overview';
 import Sections from '../components/warehouse/Sections';
+import { getWarehouse } from '../utils/http/gets';
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -13,8 +13,8 @@ const Warehouse = () => {
 
   const fetchWarehouse = async () => {
     try {
-      const response = await axios.get(`/api/warehouse/${id}`);
-      setWarehouse(response.data);
+      const warehouse = await getWarehouse(id);
+      setWarehouse(warehouse);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching warehouse:', error);
@@ -48,10 +48,10 @@ const Warehouse = () => {
         <h1 className="text-3xl font-bold text-accent-800 mb-4">Warehouse: {warehouse.name}</h1>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <div className="align-center">
-          <Overview warehouse={warehouse} />
+          <Overview warehouse={warehouse} loading={loading} />
         </div>
       </motion.div>
-      <Sections sections={warehouse.sections} warehouseId={warehouse.id} />
+      <Sections sections={warehouse.sections} loading={loading} />
     </div>
   )
 }

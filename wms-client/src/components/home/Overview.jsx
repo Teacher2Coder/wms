@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import CreateWarehouseModal from './CreateWarehouseModal';
 import { useState } from 'react';
+import Loading from '../Loading';
 
 const Overview = ({ itemVarients, warehouses, loading }) => {
   
@@ -12,6 +13,7 @@ const Overview = ({ itemVarients, warehouses, loading }) => {
   
   return (
     <div>
+      {loading && <Loading />}
       {!loading && warehouses.length > 0 && (
           <motion.div 
             variants={itemVarients}

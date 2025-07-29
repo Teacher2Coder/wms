@@ -4,7 +4,10 @@ import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Warehouse from './pages/Warehouse.jsx';
+import Section from './pages/Section.jsx';
 import Error from './pages/Error.jsx';
+import Product from './pages/Product.jsx';
+import Item from './pages/Item.jsx';
 import './styles/app.css';
 
 const App = () => {
@@ -18,6 +21,9 @@ const App = () => {
           <Routes location={location} key={location.pathname}>
             <Route path='/' element={<Home />} />
             <Route path='/warehouse/:id' element={<Warehouse />} />
+            <Route path='/section/:sectionId' element={<Section />} />
+            <Route path='/product/:productId' element={<Product />} />
+            <Route path='/item/:itemId' element={<Item />} />
             <Route path='*' element={<Error />} />
           </Routes>
       </AnimatePresence>

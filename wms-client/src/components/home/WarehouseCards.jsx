@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Eye, ExternalLink } from 'lucide-react';
+import Loading from '../Loading';
 
 const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, cardVariants }) => {
   
@@ -22,10 +23,7 @@ const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, 
             variants={itemVarients}
             className="text-center py-20"
           >
-            <div className="inline-flex items-center space-x-3">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-              <span className="text-xl font-medium text-accent-700">Loading warehouses...</span>
-            </div>
+            <Loading />
           </motion.div>
         ) : warehouses.length === 0 ? (
           /* Empty State */

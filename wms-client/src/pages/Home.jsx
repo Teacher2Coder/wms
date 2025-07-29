@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import WarehouseCards from '../components/home/WarehouseCards';
 import Overview from '../components/home/Overview';
+import { getWarehouses } from '../utils/http/gets';
 
 const Home = () => {
 
@@ -11,8 +11,8 @@ const Home = () => {
 
   const fetchWarehouses = async () => {
     try {
-      const response = await axios.get('/api/warehouse');
-      setWarehouses(response.data);
+      const warehouses = await getWarehouses();
+      setWarehouses(warehouses);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching warehouses:', error);

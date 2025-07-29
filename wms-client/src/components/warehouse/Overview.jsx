@@ -1,6 +1,11 @@
 import { Settings } from "lucide-react";
+import Loading from '../Loading';
 
-const Overview = ({ warehouse }) => {
+const Overview = ({ warehouse, loading }) => {
+  if (loading) {
+    return <Loading />;
+  }
+  
   return (
     <div className="bg-white rounded-lg p-6 shadow-lg mb-12">
       <div className="flex items-center justify-between">
