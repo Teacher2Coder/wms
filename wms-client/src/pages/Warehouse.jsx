@@ -22,8 +22,6 @@ const Warehouse = () => {
     }
   }
 
-  console.log(warehouse);
-
   useEffect(() => {
     fetchWarehouse();
   }, [id]);

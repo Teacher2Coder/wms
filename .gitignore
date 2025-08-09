@@ -18,6 +18,7 @@ WMS.Api/obj/
 # System files
 .DS_Store
 Thumbs.db
+.editorconfig
 
 # User-specific files
 WMS.Api/.vs/

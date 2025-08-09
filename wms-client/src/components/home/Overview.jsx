@@ -7,10 +7,6 @@ const Overview = ({ itemVarients, warehouses, loading }) => {
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
-  const handleCreateWarehouse = (warehouse) => {
-    console.log(warehouse);
-  }
-  
   return (
     <div>
       {loading && <Loading />}
@@ -30,7 +26,10 @@ const Overview = ({ itemVarients, warehouses, loading }) => {
               <p>Damaged Inventory: {warehouses.reduce((total, warehouse) => total + warehouse.damagedInventory, 0)}</p>
               <p>Expired Inventory: {warehouses.reduce((total, warehouse) => total + warehouse.expiredInventory, 0)}</p>
               <p>Out of Stock Inventory: {warehouses.reduce((total, warehouse) => total + warehouse.outOfStockInventory, 0)}</p>
-              <button className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 mt-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg" onClick={() => setIsCreateModalOpen(true)}>
+              <button 
+                className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 mt-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg" 
+                onClick={() => setIsCreateModalOpen(true)}
+              >
                 Create a Warehouse
               </button>
             </div>
@@ -39,7 +38,6 @@ const Overview = ({ itemVarients, warehouses, loading }) => {
         <CreateWarehouseModal 
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
-          onSubmit={handleCreateWarehouse}
         />
     </div>
   )

@@ -8,8 +8,8 @@ const createItem = async (item) => {
   return false;
 }
 
-const createSection = async (section) => {
-  const response = await axios.post('/api/section', section);
+const createSection = async (warehouseId, section) => {
+  const response = await axios.post(`/api/warehouse/${warehouseId}/section`, section);
   if (response.status === 201) {
     return true;
   }

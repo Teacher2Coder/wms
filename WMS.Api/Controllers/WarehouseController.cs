@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
+using WMS.Api.Entities;
 
 namespace WMS.Api.Controllers;
 
@@ -42,5 +43,17 @@ public class WarehouseController : ControllerBase
 
     var warehouseDto = _mapper.Map<WarehouseDto>(warehouse);
     return Ok(warehouseDto);
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> CreateWarehouse(WarehouseDto warehouseDto)
+  {
+    var warehouse = _mapper.Map<Warehouse>(warehouseDto);
+    await _warehouseRepository.CreateWarehouseAsync(warehouse);
+    
+    return CreatedAtAction(
+      nameof(GetWarehouse), 
+      new { id = warehouse.Id }, 
+      warehouseDto);
   }
 }

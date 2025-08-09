@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { Eye, ExternalLink } from 'lucide-react';
 import Loading from '../Loading';
 
-const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, cardVariants }) => {
-  
-  console.log(warehouses);
+const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, cardVariants }) => {  
   
   return (
     <div>
