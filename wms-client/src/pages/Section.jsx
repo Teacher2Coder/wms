@@ -2,16 +2,17 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getSection } from '../utils/http/gets';
+import SectionOverview from '../components/section/SectionOverview';
 
 const Section = () => {
 
-  const { sectionId } = useParams();
+  const { warehouseId, sectionId } = useParams();
   const [section, setSection] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchSection = async () => {
     try {
-      const section = await getSection(sectionId);
+      const section = await getSection(warehouseId, sectionId);
       setSection(section);
       setLoading(false);
     } catch (error) {
@@ -23,8 +24,6 @@ const Section = () => {
   useEffect(() => {
     fetchSection();
   }, [])
-
-  console.log(section);
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -69,6 +68,7 @@ const Section = () => {
         <h1 className="text-3xl font-bold text-accent-800 mb-4">Section: {section.name}</h1>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <div className="align-center">
+          <SectionOverview section={section} warehouseId={warehouseId} loading={loading} />
         </div>
       </motion.div>
     </div>

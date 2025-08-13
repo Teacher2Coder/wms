@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Overview from '../components/warehouse/Overview';
+import WarehouseOverview from '../components/warehouse/WarehouseOverview';
 import Sections from '../components/warehouse/Sections';
 import { getWarehouse } from '../utils/http/gets';
+import Loading from '../components/Loading';
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -27,7 +28,7 @@ const Warehouse = () => {
   }, [id]);
   
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!warehouse) {
@@ -46,10 +47,10 @@ const Warehouse = () => {
         <h1 className="text-3xl font-bold text-accent-800 mb-4">Warehouse: {warehouse.name}</h1>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <div className="align-center">
-          <Overview warehouse={warehouse} loading={loading} />
+          <WarehouseOverview warehouse={warehouse} loading={loading} />
         </div>
       </motion.div>
-      <Sections sections={warehouse.sections} loading={loading} />
+      <Sections sections={warehouse.sections} loading={loading} warehouseId={id} />
     </div>
   )
 }

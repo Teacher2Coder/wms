@@ -24,6 +24,11 @@ public class Section
 
   public ICollection<Product> Products { get; set; } = new List<Product>();
 
+  public Section()
+  {
+    Name = string.Empty;
+  }
+
   public Section(string name, int warehouseId)
   {
     Name = name;

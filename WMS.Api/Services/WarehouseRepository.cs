@@ -65,10 +65,12 @@ public class WarehouseRepository : IWarehouseRepository
     return await SaveChangesAsync();
   }
 
-  public async Task<bool> CreateSectionAsync(Section section)
+  public async Task<Section?> CreateSectionAsync(int warehouseId, Section section)
   {
+    section.WarehouseId = warehouseId;
     await _context.Sections.AddAsync(section);
-    return await SaveChangesAsync();
+    var saved = await SaveChangesAsync();
+    return saved ? section : null;
   }
 
   public async Task<bool> CreateProductAsync(Product product)

@@ -1,13 +1,12 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { updateWarehouse } from '../../utils/http/updates';
+import { updateSection } from '../../utils/http/updates';
 
-const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
+const SectionSettings = ({ isOpen, onClose, onDelete, warehouseId, section }) => {
   const [formData, setFormData] = useState({
-    Id: warehouse.id,
-    Name: warehouse.name,
-    Location: warehouse.location,
-    Description: warehouse.description
+    Id: section.id,
+    Name: section.name,
+    Description: section.description
   })
 
   const handleChange = (e) => {
@@ -16,9 +15,8 @@ const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await updateWarehouse(warehouse.id, formData);
+      await updateSection(warehouseId, section.id, formData);
     } catch (err) {
       console.error(err);
     } finally {
@@ -43,15 +41,11 @@ const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
         transition={{ duration: 0.3 }}
         className="bg-white rounded-lg p-6 max-w-md w-full mx-4"
       >
-        <h2 className="text-2xl font-bold text-accent-800 mb-4">Edit Warehouse</h2>
+        <h2 className="text-2xl font-bold text-accent-800 mb-4">Edit Section</h2>
         <form className="space-y-4">
           <div>
             <label htmlFor="Name" className="block text-sm font-medium text-accent-600">Name</label>
             <input type="text" id="Name" name="Name" className="mt-1 block w-full rounded-md border-accent-200 shadow-sm focus:border-primary-500 focus:ring-primary-500" value={formData.Name} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="Location" className="block text-sm font-medium text-accent-600">Location</label>
-            <input type="text" id="Location" name="Location" className="mt-1 block w-full rounded-md border-accent-200 shadow-sm focus:border-primary-500 focus:ring-primary-500" value={formData.Location} onChange={handleChange} />
           </div>
           <div>
             <label htmlFor="Description" className="block text-sm font-medium text-accent-600">Description</label>
@@ -68,4 +62,4 @@ const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
   )
 }
 
-export default WarehouseSettings;
+export default SectionSettings;

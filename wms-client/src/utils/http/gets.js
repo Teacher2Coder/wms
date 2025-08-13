@@ -15,8 +15,8 @@ const getSections = async (warehouseId) => {
   return response.data;
 }
 
-const getSection = async (sectionId) => {
-  const response = await axios.get(`/api/section/${sectionId}`);
+const getSection = async (warehouseId, sectionId) => {
+  const response = await axios.get(`/api/warehouse/${warehouseId}/section/${sectionId}`);
   return response.data;
 }
 

@@ -13,9 +13,9 @@ const updateItem = async (itemId, item) => {
   }
 }
 
-const updateSection = async (sectionId, section) => {
+const updateSection = async (warehouseId, sectionId, section) => {
   try {
-    const response = await axios.put(`/api/section/${sectionId}`, section);
+    const response = await axios.put(`/api/warehouse/${warehouseId}/section/${sectionId}`, section);
     if (response.status === 200) {
       return response.data;
     }
@@ -25,7 +25,6 @@ const updateSection = async (sectionId, section) => {
     return null;
   }
 }
-
 
 const updateProduct = async (productId, product) => {
   try {
@@ -40,11 +39,9 @@ const updateProduct = async (productId, product) => {
   }
 }
 
-
 const updateWarehouse = async (warehouseId, warehouse) => {
   try {
     const response = await axios.put(`/api/warehouse/${warehouseId}`, warehouse);
-    console.log(response);
     if (response.status === 200) {
       return response.data;
     }

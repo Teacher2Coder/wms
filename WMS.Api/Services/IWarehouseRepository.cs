@@ -12,7 +12,7 @@ public interface IWarehouseRepository
   Task<Item?> GetItemByIdAsync(int id);
 
   Task<bool> CreateWarehouseAsync(Warehouse warehouse);
-  Task<bool> CreateSectionAsync(Section section);
+  Task<Section?> CreateSectionAsync(int warehouseId, Section section);
   Task<bool> CreateProductAsync(Product product);
   Task<bool> CreateItemAsync(Item item);
 

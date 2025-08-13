@@ -2,12 +2,14 @@ import { Settings } from "lucide-react";
 import { useState } from "react";
 import Loading from '../Loading';
 import WarehouseSettings from './WarehouseSettings';
+import CreateSectionModal from './CreateSectionModal';
 import DeleteModal from "../DeleteModal";
 import { deleteWarehouse } from "../../utils/http/deletes";
 
-const Overview = ({ warehouse, loading }) => {
+const WarehouseOverview = ({ warehouse, loading }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCreateSectionModalOpen, setIsCreateSectionModalOpen] = useState(false);
   
   const handleSwitchDelete = () => {
     setIsSettingsModalOpen(false);
@@ -83,6 +85,7 @@ const Overview = ({ warehouse, loading }) => {
           <span className="font-semibold">Out of Stock Inventory:</span>{" "}
           {warehouse.outOfStockInventory}
         </p>
+        <button onClick={() => setIsCreateSectionModalOpen(true)}>Create Section</button>
       </div>
       <WarehouseSettings 
         isOpen={isSettingsModalOpen}
@@ -97,8 +100,13 @@ const Overview = ({ warehouse, loading }) => {
         item='warehouse'
         warningText='All data related to this warehouse will be deleted. This includes the warehouse itself, all sections, and all inventory items. This action cannot be undone.'
       />
+      <CreateSectionModal 
+        isOpen={isCreateSectionModalOpen}
+        onClose={() => setIsCreateSectionModalOpen(false)}
+        warehouseId={warehouse.id}
+      />
     </div>
   );
 };
 
-export default Overview;
+export default WarehouseOverview;

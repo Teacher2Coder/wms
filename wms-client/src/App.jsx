@@ -21,7 +21,7 @@ const App = () => {
           <Routes location={location} key={location.pathname}>
             <Route path='/' element={<Home />} />
             <Route path='/warehouse/:id' element={<Warehouse />} />
-            <Route path='/section/:sectionId' element={<Section />} />
+            <Route path='/warehouse/:warehouseId/section/:sectionId' element={<Section />} />
             <Route path='/product/:productId' element={<Product />} />
             <Route path='/item/:itemId' element={<Item />} />
             <Route path='*' element={<Error />} />
