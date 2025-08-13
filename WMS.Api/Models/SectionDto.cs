@@ -15,4 +15,5 @@ public class SectionDto
   public int InTransitInventory => Products.Sum(p => p.Items.Count(i => i.Status == ItemStatus.InTransit));
   public int DamagedInventory => Products.Sum(p => p.Items.Count(i => i.Status == ItemStatus.Damaged));
   public int ExpiredInventory => Products.Sum(p => p.Items.Count(i => i.Status == ItemStatus.Expired));
+  public int OutOfStockInventory => Products.Count(p => p.Items.Count(i => i.Status == ItemStatus.Available) == 0);
 }

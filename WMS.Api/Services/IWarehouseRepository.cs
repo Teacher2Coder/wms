@@ -16,15 +16,10 @@ public interface IWarehouseRepository
   Task<bool> CreateProductAsync(Product product);
   Task<bool> CreateItemAsync(Item item);
 
-  Task<bool> UpdateWarehouseAsync(Warehouse warehouse);
-  Task<bool> UpdateSectionAsync(Section section);
-  Task<bool> UpdateProductAsync(Product product);
-  Task<bool> UpdateItemAsync(Item item);
-
-  Task<bool> DeleteWarehouseAsync(Warehouse warehouse);
-  Task<bool> DeleteSectionAsync(Section section);
-  Task<bool> DeleteProductAsync(Product product);
-  Task<bool> DeleteItemAsync(Item item);
+  Task<bool> DeleteWarehouseAsync(int id);
+  Task<bool> DeleteSectionAsync(int id);
+  Task<bool> DeleteProductAsync(int id);
+  Task<bool> DeleteItemAsync(int id);
   
   Task<bool> SaveChangesAsync();
 }

@@ -13,6 +13,17 @@ const Overview = ({ warehouse, loading }) => {
     setIsSettingsModalOpen(false);
     setIsDeleteModalOpen(true);
   }
+
+  const handleDeleteWarehouse = async () => {
+    try {
+      await deleteWarehouse(warehouse.id);
+      setIsDeleteModalOpen(false);
+      // Navigate back to home or refresh the page
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Failed to delete warehouse:', error);
+    }
+  }
   
   if (loading) {
     return <Loading />;
@@ -68,18 +79,23 @@ const Overview = ({ warehouse, loading }) => {
           <span className="font-semibold">Expired Inventory:</span>{" "}
           {warehouse.expiredInventory}
         </p>
+        <p className="text-accent-600 mb-4">
+          <span className="font-semibold">Out of Stock Inventory:</span>{" "}
+          {warehouse.outOfStockInventory}
+        </p>
       </div>
       <WarehouseSettings 
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
-        onDelete={() => handleSwitchDelete}
+        onDelete={handleSwitchDelete}
         warehouse={warehouse}
       />
       <DeleteModal 
         isDeleteModalOpen={isDeleteModalOpen}
         onDeleteModalClose={() => setIsDeleteModalOpen(false)}
-        action={deleteWarehouse}
+        action={handleDeleteWarehouse}
         item='warehouse'
+        warningText='All data related to this warehouse will be deleted. This includes the warehouse itself, all sections, and all inventory items. This action cannot be undone.'
       />
     </div>
   );

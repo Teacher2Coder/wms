@@ -23,6 +23,11 @@ public class Warehouse
   // Navigation properties
   public ICollection<Section> Sections { get; set; } = new List<Section>();
 
+  public Warehouse()
+  {
+    Name = string.Empty;
+  }
+
   public Warehouse(string name)
   {
     Name = name;

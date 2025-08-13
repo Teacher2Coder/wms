@@ -17,6 +17,7 @@ public class WarehouseProfile : Profile
       .ForMember(dest => dest.DamagedInventory, opt => opt.Ignore())
       .ForMember(dest => dest.ExpiredInventory, opt => opt.Ignore());
 
-    CreateMap<WarehouseDto, Warehouse>();
+    CreateMap<WarehouseDto, Warehouse>()
+      .ForMember(dest => dest.Sections, opt => opt.Ignore());
   }
 }

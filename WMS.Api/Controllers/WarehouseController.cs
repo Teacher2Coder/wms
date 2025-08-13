@@ -56,4 +56,33 @@ public class WarehouseController : ControllerBase
       new { id = warehouse.Id }, 
       warehouseDto);
   }
+
+  [HttpPut("{id}")]
+  public async Task<IActionResult> UpdateWarehouse(int id, WarehouseDto warehouseDto)
+  {
+    var warehouseToUpdate = await _warehouseRepository.GetWarehouseByIdAsync(id);
+
+    if (warehouseToUpdate == null)
+    {
+      return NotFound();
+    }
+
+    _mapper.Map(warehouseDto, warehouseToUpdate);
+    await _warehouseRepository.SaveChangesAsync();
+
+    return Ok(warehouseDto);
+  }
+
+  [HttpDelete("{id}")]
+  public async Task<IActionResult> DeleteWarehouse(int id)
+  {
+    var warehouseToDelete = await _warehouseRepository.GetWarehouseByIdAsync(id);
+    if (warehouseToDelete == null)
+    {
+      return NotFound();
+    }
+
+    await _warehouseRepository.DeleteWarehouseAsync(id);
+    return Ok(warehouseToDelete);
+  }
 }

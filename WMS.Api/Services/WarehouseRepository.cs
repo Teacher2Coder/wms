@@ -85,56 +85,48 @@ public class WarehouseRepository : IWarehouseRepository
   
   #endregion
 
-  #region Update
-
-  public async Task<bool> UpdateWarehouseAsync(Warehouse warehouse)
-  {
-    _context.Warehouses.Update(warehouse);
-    return await SaveChangesAsync();
-  }
-
-  public async Task<bool> UpdateSectionAsync(Section section)
-  {
-    _context.Sections.Update(section);
-    return await SaveChangesAsync();
-  }
-
-  public async Task<bool> UpdateProductAsync(Product product)
-  {
-    _context.Products.Update(product);
-    return await SaveChangesAsync();
-  }
-
-  public async Task<bool> UpdateItemAsync(Item item)
-  {
-    _context.Items.Update(item);
-    return await SaveChangesAsync();
-  }
-  
-  #endregion
-
   #region Delete
 
-  public async Task<bool> DeleteWarehouseAsync(Warehouse warehouse)
+  public async Task<bool> DeleteWarehouseAsync(int id)
   {
+    var warehouse = await _context.Warehouses.FindAsync(id);
+    if (warehouse == null)
+    {
+      return false;
+    }
     _context.Warehouses.Remove(warehouse);
     return await SaveChangesAsync();
   }
 
-  public async Task<bool> DeleteSectionAsync(Section section)
+  public async Task<bool> DeleteSectionAsync(int id)
   {
+    var section = await _context.Sections.FindAsync(id);
+    if (section == null)
+    {
+      return false;
+    }
     _context.Sections.Remove(section);
     return await SaveChangesAsync();
   }
 
-  public async Task<bool> DeleteProductAsync(Product product)
+  public async Task<bool> DeleteProductAsync(int id)
   {
+    var product = await _context.Products.FindAsync(id);
+    if (product == null)
+    {
+      return false;
+    }
     _context.Products.Remove(product);
     return await SaveChangesAsync();
   }
 
-  public async Task<bool> DeleteItemAsync(Item item)
+  public async Task<bool> DeleteItemAsync(int id)
   {
+    var item = await _context.Items.FindAsync(id);
+    if (item == null)
+    {
+      return false;
+    }
     _context.Items.Remove(item);
     return await SaveChangesAsync();
   }
