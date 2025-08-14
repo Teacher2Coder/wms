@@ -50,11 +50,13 @@ public class WarehouseController : ControllerBase
   {
     var warehouse = _mapper.Map<Warehouse>(warehouseDto);
     await _warehouseRepository.CreateWarehouseAsync(warehouse);
+
+    var createdWarehouse = _mapper.Map<WarehouseDto>(warehouse);
     
     return CreatedAtAction(
       nameof(GetWarehouse), 
       new { id = warehouse.Id }, 
-      warehouseDto);
+      createdWarehouse);
   }
 
   [HttpPut("{id}")]

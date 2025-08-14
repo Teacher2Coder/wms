@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import CreateWarehouseModal from './CreateWarehouseModal';
 import { useState } from 'react';
-import Loading from '../Loading';
 
 const Overview = ({ itemVarients, warehouses }) => {
   
@@ -37,7 +36,10 @@ const Overview = ({ itemVarients, warehouses }) => {
         )}
         <CreateWarehouseModal 
           isOpen={isCreateModalOpen}
-          onClose={() => setIsCreateModalOpen(false)}
+          onClose={() => {
+            setIsCreateModalOpen(false);
+            window.location.reload();
+          }}
         />
     </div>
   )

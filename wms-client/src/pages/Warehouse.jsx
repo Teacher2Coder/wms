@@ -26,6 +26,37 @@ const Warehouse = () => {
   useEffect(() => {
     fetchWarehouse();
   }, [id]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2,
+        delay: 0.3,
+      },
+    }
+  };
+
+  const itemVarients = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
   
   if (loading) {
     return <Loading />;
@@ -38,6 +69,7 @@ const Warehouse = () => {
   return (
     <div>
       <motion.div
+        variants={containerVariants}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -47,10 +79,10 @@ const Warehouse = () => {
         <h1 className="text-3xl font-bold text-accent-800 mb-4">Warehouse: {warehouse.name}</h1>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <div className="align-center">
-          <WarehouseOverview warehouse={warehouse} loading={loading} />
+          <WarehouseOverview warehouse={warehouse} variants={itemVarients} />
         </div>
       </motion.div>
-      <Sections sections={warehouse.sections} loading={loading} warehouseId={id} />
+      <Sections sections={warehouse.sections} warehouseId={id} variants={itemVarients} />
     </div>
   )
 }

@@ -72,9 +72,14 @@ const Section = () => {
       >
         <h1 className="text-3xl font-bold text-accent-800 mb-4">Section: {section.name}</h1>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
-        <div className="align-center">
-          <SectionOverview section={section} warehouseId={warehouseId} loading={loading} />
-        </div>
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="align-center"
+        >
+          <SectionOverview section={section} warehouseId={warehouseId} variants={cardVariants} />
+        </motion.div>
       </motion.div>
     </div>
   );

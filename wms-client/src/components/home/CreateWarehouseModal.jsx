@@ -16,11 +16,14 @@ const CreateWarehouseModal = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      createWarehouse(formData);
+      const warehouse = await createWarehouse(formData);
+      console.log(warehouse);
+      if (warehouse) {
+        onClose();
+        window.location.href = `/warehouse/${warehouse.id}`;
+      }
     } catch (err) {
       console.error(err);
-    } finally {
-      location.reload();
     }
   }
   
