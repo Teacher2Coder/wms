@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import Loading from '../components/Loading';
 import WarehouseCards from '../components/home/WarehouseCards';
 import Overview from '../components/home/Overview';
 import { getWarehouses } from '../utils/http/gets';
@@ -55,6 +56,10 @@ const Home = () => {
     },
   };
 
+  if (loading) {
+    return <Loading />
+  }
+
   return (
     <div className="min-h-screen gradient-bg">
       <motion.div
@@ -93,7 +98,6 @@ const Home = () => {
         <WarehouseCards 
           itemVarients={itemVarients} 
           warehouses={warehouses} 
-          loading={loading}
           containerVariants={containerVariants}
           cardVariants={cardVariants}
         />
@@ -101,7 +105,6 @@ const Home = () => {
         <Overview
           itemVarients={itemVarients}
           warehouses={warehouses}
-          loading={loading}
         />
         
       </motion.div>

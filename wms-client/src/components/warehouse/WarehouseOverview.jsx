@@ -1,12 +1,11 @@
 import { Settings } from "lucide-react";
 import { useState } from "react";
-import Loading from '../Loading';
 import WarehouseSettings from './WarehouseSettings';
 import CreateSectionModal from './CreateSectionModal';
 import DeleteModal from "../DeleteModal";
 import { deleteWarehouse } from "../../utils/http/deletes";
 
-const WarehouseOverview = ({ warehouse, loading }) => {
+const WarehouseOverview = ({ warehouse }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCreateSectionModalOpen, setIsCreateSectionModalOpen] = useState(false);
@@ -25,10 +24,6 @@ const WarehouseOverview = ({ warehouse, loading }) => {
     } catch (error) {
       console.error('Failed to delete warehouse:', error);
     }
-  }
-  
-  if (loading) {
-    return <Loading />;
   }
   
   return (

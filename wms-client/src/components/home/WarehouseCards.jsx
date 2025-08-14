@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Eye, ExternalLink } from 'lucide-react';
-import Loading from '../Loading';
 import CreateWarehouseModal from '../home/CreateWarehouseModal';
 import { useState } from 'react';
+import handleSmoothScroll from '../../utils/handleSmoothScroll';
 
-const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, cardVariants }) => {  
+const WarehouseCards = ({ itemVarients, warehouses, containerVariants, cardVariants }) => {  
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
   return (
@@ -18,15 +18,7 @@ const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, 
           <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         </motion.div>
 
-        {/* Loading State */}
-        {loading ? (
-          <motion.div 
-            variants={itemVarients}
-            className="text-center py-20"
-          >
-            <Loading />
-          </motion.div>
-        ) : warehouses.length === 0 ? (
+        {warehouses.length === 0 ? (
           /* Empty State */
           <motion.div 
             variants={itemVarients}
@@ -80,7 +72,10 @@ const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, 
                       variants={cardVariants}
                       custom={index}
                       className="hover:bg-primary-50/50 transition-all duration-200 group cursor-pointer"
-                      onClick={() => window.location.href = `/warehouse/${warehouse.id}`}
+                      onClick={() => {
+                        handleSmoothScroll();
+                        window.location.href = `/warehouse/${warehouse.id}`;
+                      }}
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
@@ -93,7 +88,12 @@ const WarehouseCards = ({ itemVarients, warehouses, loading, containerVariants, 
                             <Link 
                               to={`/warehouse/${warehouse.id}`} 
                               className="font-semibold text-accent-800 hover:text-primary-600 transition-colors flex items-center space-x-1 group/link"
-                              onClick={(e) => e.stopPropagation()}
+                              onClick={
+                                (e) => {
+                                  e.stopPropagation();
+                                  handleSmoothScroll();
+                                }
+                              }
                             >
                               <span>{warehouse.name}</span>
                               <ExternalLink className="w-3 h-3 opacity-0 group-hover/link:opacity-100 transition-opacity" />

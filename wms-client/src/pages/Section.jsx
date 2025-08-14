@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getSection } from '../utils/http/gets';
 import SectionOverview from '../components/section/SectionOverview';
+import Loading from '../components/Loading';
 
 const Section = () => {
 
@@ -55,6 +56,10 @@ const Section = () => {
       transition: { duration: 0.5, ease: "easeOut" },
     },
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen gradient-bg">

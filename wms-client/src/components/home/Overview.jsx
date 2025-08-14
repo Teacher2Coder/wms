@@ -3,14 +3,14 @@ import CreateWarehouseModal from './CreateWarehouseModal';
 import { useState } from 'react';
 import Loading from '../Loading';
 
-const Overview = ({ itemVarients, warehouses, loading }) => {
+const Overview = ({ itemVarients, warehouses }) => {
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
   return (
     <div>
-      {loading && <Loading />}
-      {!loading && warehouses.length > 0 && (
+      
+      {warehouses.length > 0 && (
           <motion.div 
             variants={itemVarients}
             className="text-center mt-16"

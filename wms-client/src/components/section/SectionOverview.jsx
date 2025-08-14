@@ -1,11 +1,10 @@
 import { Settings } from 'lucide-react';
 import { useState } from 'react';
-import Loading from '../Loading';
 import SectionSettings from './SectionSettings';
 import DeleteModal from '../DeleteModal';
 import { deleteSection } from '../../utils/http/deletes';
 
-const SectionOverview = ({ section, warehouseId, loading }) => {
+const SectionOverview = ({ section, warehouseId }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -23,10 +22,6 @@ const SectionOverview = ({ section, warehouseId, loading }) => {
     } finally {
       window.location.href = `/warehouse/${warehouseId}`;
     }
-  }
-
-  if (loading) {
-    return <Loading />;
   }
 
   return (
