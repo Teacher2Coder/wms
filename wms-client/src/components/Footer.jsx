@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom'
 import handleSmoothScroll from '../utils/handleSmoothScroll'
 
 const Footer = () => {
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Product Management', path: '/products' },
+  ];
+  
   return (
     <footer className="bg-white dark:bg-accent-900 border-t border-gray-200 dark:border-accent-700">
       <div className="max-w-7xl mx-auto container-padding py-12">
@@ -21,13 +26,16 @@ const Footer = () => {
               Quick Links
             </h4>
             <div className="space-y-2">
-              <Link
-                to="/home" 
-                className="block text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300" 
-                onClick={() => handleSmoothScroll()}
-              >
-                Home
-              </Link>
+              {navItems.map((item) => (
+                <Link
+                  to={item.path}
+                  key={item.label}
+                  onClick={() => handleSmoothScroll()}
+                  className="block text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
