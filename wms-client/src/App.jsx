@@ -6,7 +6,7 @@ import Home from './pages/Home.jsx';
 import Warehouse from './pages/Warehouse.jsx';
 import Section from './pages/Section.jsx';
 import Error from './pages/Error.jsx';
-import Product from './pages/Product.jsx';
+import Products from './pages/Products.jsx';
 import Item from './pages/Item.jsx';
 import './styles/app.css';
 
@@ -22,11 +22,11 @@ const App = () => {
             <Route path='/' element={<Home />} />
             <Route path='/warehouse/:id' element={<Warehouse />} />
             <Route path='/warehouse/:warehouseId/section/:sectionId' element={<Section />} />
-            <Route path='/product/:productId' element={<Product />} />
+            <Route path='/products' element={<Products />} />
             <Route path='/item/:itemId' element={<Item />} />
             <Route path='*' element={<Error />} />
           </Routes>
-      </AnimatePresence>
+        </AnimatePresence>
       </main>
       <Footer />
     </div>

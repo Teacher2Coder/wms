@@ -18,6 +18,13 @@ public class ProductController : ControllerBase
     _warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
   }
 
+  [HttpGet]
+  public async Task<IActionResult> GetAllProducts()
+  {
+    var products = await _warehouseRepository.GetAllProductsAsync();
+    return Ok(products);
+  }
+
   [HttpGet("{productId}")]
   public async Task<IActionResult> GetProduct(int productId)
   {

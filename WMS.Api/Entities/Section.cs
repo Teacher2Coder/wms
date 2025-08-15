@@ -22,7 +22,7 @@ public class Section
 
   public Warehouse? Warehouse { get; set; }
 
-  public ICollection<Product> Products { get; set; } = new List<Product>();
+  public ICollection<Item> Items { get; set; } = new List<Item>();
 
   public Section()
   {

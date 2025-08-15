@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import CreateSectionModal from "./CreateSectionModal";
+import CreateProductModal from "./CreateProductModal";
 import { useState } from "react";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
 
-const Sections = ({ sections, warehouseId, variants }) => {
-
-  const [isCreateSectionModalOpen, setIsCreateSectionModalOpen] = useState(false);
+const ProductList = ({ products, variants }) => {
+  const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
   
   return (
     <div>
-      {sections.length === 0 && (
+      {(!products || products.length === 0) && (
         <motion.div 
           variants={variants}
           className="text-center py-20"
@@ -21,34 +20,34 @@ const Sections = ({ sections, warehouseId, variants }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-accent-800 mb-2">No Sections Found</h3>
-            <p className="text-accent-600">Add your first section to get started.</p>
+            <h3 className="text-xl font-semibold text-accent-800 mb-2">No Products Found</h3>
+            <p className="text-accent-600">Add your first product to get started.</p>
             <button 
               className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 mt-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg" 
-              onClick={() => setIsCreateSectionModalOpen(true)}
+              onClick={() => setIsCreateProductModalOpen(true)}
             >
-              Create a Section
+              Create a Product
             </button>
           </div>
         </motion.div>
       )}
-      {sections.length > 0 && (
+      {products && products.length > 0 && (
         <motion.div 
           variants={variants}
           className="text-center py-20"
         >
-          <h2 className="text-2xl font-bold text-accent-800 mb-4">Sections</h2>
+          <h2 className="text-2xl font-bold text-accent-800 mb-4">Products</h2>
           <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {sections.map((section) => (
+            {products.map((product) => (
               <motion.div 
-                key={section.id}
+                key={product.id}
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.2 }}
               >
                 <Link 
-                  to={`/warehouse/${warehouseId}/section/${section.id}`} 
+                  to={`/product/${product.id}`} 
                   className="block group"
                   onClick={() => handleSmoothScroll()}
                 >
@@ -57,39 +56,39 @@ const Sections = ({ sections, warehouseId, variants }) => {
                     <div className="flex items-center justify-between mb-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-md">
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs font-medium text-accent-500 uppercase tracking-wide">Section</div>
+                        <div className="text-xs font-medium text-accent-500 uppercase tracking-wide">Product</div>
                       </div>
                     </div>
                     
                     {/* Content */}
                     <div className="space-y-3">
                       <h3 className="text-xl font-bold text-accent-800 group-hover:text-primary-600 transition-colors duration-200">
-                        {section.name}
+                        {product.sku}
                       </h3>
                       <p className="text-accent-600 text-sm leading-relaxed line-clamp-2">
-                        {section.description}
+                        {product.description || 'No description available'}
                       </p>
                       
                       {/* Stats */}
                       <div className="grid grid-cols-2 gap-4 pt-4 border-t border-accent-100">
                         <div className="text-center">
                           <div className="text-2xl font-bold text-accent-800">
-                            {section.items.length}
-                          </div>
-                          <div className="text-xs font-medium text-accent-500 uppercase tracking-wide">
-                            Products
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-accent-800">
-                            {section.totalInventory}
+                            {product.items ? product.items.length : 0}
                           </div>
                           <div className="text-xs font-medium text-accent-500 uppercase tracking-wide">
                             Total Items
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-emerald-600">
+                            {product.items ? product.items.filter(item => item.status === 0).length : 0}
+                          </div>
+                          <div className="text-xs font-medium text-accent-500 uppercase tracking-wide">
+                            Available
                           </div>
                         </div>
                       </div>
@@ -109,9 +108,12 @@ const Sections = ({ sections, warehouseId, variants }) => {
           </div>
         </motion.div>
       )}
-      <CreateSectionModal isOpen={isCreateSectionModalOpen} onClose={() => setIsCreateSectionModalOpen(false)} warehouseId={warehouseId} />
+      <CreateProductModal 
+        isOpen={isCreateProductModalOpen} 
+        onClose={() => setIsCreateProductModalOpen(false)} 
+      />
     </div>
   )
 }
 
-export default Sections;
+export default ProductList;
