@@ -10,7 +10,7 @@ public class Item
   [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
   public int Id { get; set; }
 
-  public string SerialNumber { get; set; }
+  public string? SerialNumber { get; set; }
 
   public ItemStatus Status { get; set; }
 
@@ -19,17 +19,21 @@ public class Item
 
   public Product? Product { get; set; }
 
+  [ForeignKey("SectionId")]
+  public int SectionId { get; set; }
+
+  public Section? Section { get; set; }
+
   // Parameterless constructor for Entity Framework
   public Item()
   {
     Status = ItemStatus.Available;
   }
 
-  public Item(int productId, string productSku)
+  public Item(int productId, string serialNumber)
   {
     ProductId = productId;
-    // Don't set SerialNumber here since Id might be 0
-    // It should be set after the entity is saved or explicitly in seeding
+    SerialNumber = serialNumber;
     Status = ItemStatus.Available;
   }
 }

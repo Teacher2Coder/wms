@@ -20,8 +20,7 @@ public class WarehouseRepository : IWarehouseRepository
   {
     return await _context.Warehouses
       .Include(w => w.Sections)
-        .ThenInclude(s => s.Products)
-          .ThenInclude(p => p.Items)
+        .ThenInclude(s => s.Items)
       .ToListAsync();
   }
 
@@ -29,17 +28,22 @@ public class WarehouseRepository : IWarehouseRepository
   {
     return await _context.Warehouses
       .Include(w => w.Sections)
-        .ThenInclude(s => s.Products)
-          .ThenInclude(p => p.Items)
+        .ThenInclude(s => s.Items)
       .FirstOrDefaultAsync(w => w.Id == id);
   }
 
   public async Task<Section?> GetSectionByIdAsync(int id)
   {
     return await _context.Sections
-      .Include(s => s.Products)
-        .ThenInclude(p => p.Items)
+      .Include(s => s.Items)
       .FirstOrDefaultAsync(s => s.Id == id);
+  }
+
+  public async Task<IEnumerable<Product>> GetAllProductsAsync()
+  {
+    return await _context.Products
+      .Include(p => p.Items)
+      .ToListAsync();
   }
 
   public async Task<Product?> GetProductByIdAsync(int id)

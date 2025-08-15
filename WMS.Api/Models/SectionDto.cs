@@ -9,12 +9,12 @@ public class SectionDto
   public string Name { get; set; } = string.Empty;
   public string? Description { get; set; }
   public int WarehouseId { get; set; }
-  public ICollection<ProductDto> Products { get; set; } = new List<ProductDto>();
-  public int TotalInventory => Products?.Sum(p => p.Items?.Count ?? 0) ?? 0;
-  public int AvailableInventory => Products?.Sum(p => p.Items?.Count(i => i.Status == ItemStatus.Available) ?? 0) ?? 0;
-  public int ReservedInventory => Products?.Sum(p => p.Items?.Count(i => i.Status == ItemStatus.Reserved) ?? 0) ?? 0;
-  public int InTransitInventory => Products?.Sum(p => p.Items?.Count(i => i.Status == ItemStatus.InTransit) ?? 0) ?? 0;
-  public int DamagedInventory => Products?.Sum(p => p.Items?.Count(i => i.Status == ItemStatus.Damaged) ?? 0) ?? 0;
-  public int ExpiredInventory => Products?.Sum(p => p.Items?.Count(i => i.Status == ItemStatus.Expired) ?? 0) ?? 0;
-  public int OutOfStockInventory => Products?.Count(p => (p.Items?.Count(i => i.Status == ItemStatus.Available) ?? 0) == 0) ?? 0;
+  public ICollection<ItemDto> Items { get; set; } = new List<ItemDto>();
+  public int TotalInventory => Items?.Count ?? 0;
+  public int AvailableInventory => Items?.Count(i => i.Status == ItemStatus.Available) ?? 0;
+  public int ReservedInventory => Items?.Count(i => i.Status == ItemStatus.Reserved) ?? 0;
+  public int InTransitInventory => Items?.Count(i => i.Status == ItemStatus.InTransit) ?? 0;
+  public int DamagedInventory => Items?.Count(i => i.Status == ItemStatus.Damaged) ?? 0;
+  public int ExpiredInventory => Items?.Count(i => i.Status == ItemStatus.Expired) ?? 0;
+  public int OutOfStockInventory => Items?.GroupBy(i => i.ProductId).Count(g => !g.Any(i => i.Status == ItemStatus.Available)) ?? 0;
 }

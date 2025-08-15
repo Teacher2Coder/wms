@@ -17,16 +17,10 @@ public class Product
   [MaxLength(500)]
   public string? Description { get; set; }
 
-  [ForeignKey("SectionId")]
-  public int SectionId { get; set; }
-
-  public Section? Section { get; set; }
-
   public ICollection<Item> Items { get; set; } = new List<Item>();
 
-  public Product(string sku, int sectionId)
+  public Product(string sku)
   {
     Sku = sku;
-    SectionId = sectionId;
   }
 }

@@ -20,7 +20,12 @@ const getSection = async (warehouseId, sectionId) => {
   return response.data;
 }
 
-const getProducts = async (sectionId) => {
+const getAllProducts = async () => {
+  const response = await axios.get(`/api/product`);
+  return response.data;
+}
+
+const getSectionProducts = async (sectionId) => {
   const response = await axios.get(`/api/section/${sectionId}/product`);
   return response.data;
 }
@@ -45,7 +50,8 @@ export {
   getWarehouse,
   getSections,
   getSection,
-  getProducts,
+  getAllProducts,
+  getSectionProducts,
   getProduct,
   getItems,
   getItem,
