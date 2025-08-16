@@ -50,6 +50,26 @@ const getItem = async (productId) => {
   return response.data;
 }
 
+const searchItems = async (serialNumber) => {
+  const response = await axios.get(`/api/item/search?serialNumber=${serialNumber}`);
+  return response.data;
+}
+
+const getOrders = async () => {
+  const response = await axios.get(`/api/order`);
+  return response.data;
+}
+
+const getOrder = async (orderId) => {
+  const response = await axios.get(`/api/order/${orderId}`);
+  return response.data;
+}
+
+const searchOrders = async (number) => {
+  const response = await axios.get(`/api/order/search?number=${number}`);
+  return response.data;
+}
+
 export {
   getWarehouses,
   getWarehouse,
@@ -61,4 +81,8 @@ export {
   getProduct,
   getItems,
   getItem,
+  searchItems,
+  getOrders,
+  getOrder,
+  searchOrders,
 }

@@ -18,6 +18,8 @@ public class WarehouseContext : DbContext
 
   public DbSet<Item> Items { get; set; }
 
+  public DbSet<Order> Orders { get; set; }
+
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.Entity<Warehouse>()

@@ -73,6 +73,27 @@ public class WarehouseRepository : IWarehouseRepository
       .Where(i => i.SerialNumber.Contains(serialNumber, StringComparison.CurrentCultureIgnoreCase))
       .ToListAsync();
   }
+
+  public async Task<IEnumerable<Order>> GetOrdersAsync()
+  {
+    return await _context.Orders
+      .Include(o => o.Items)
+      .ToListAsync();
+  }
+  
+  public async Task<Order?> GetOrderByIdAsync(int id)
+  {
+    return await _context.Orders
+      .Include(o => o.Items)
+      .FirstOrDefaultAsync(o => o.Id == id);
+  }
+
+  public async Task<IEnumerable<Order>> GetOrdersByNumberAsync(string number)
+  {
+    return await _context.Orders
+      .Where(o => o.OrderNumber.Contains(number, StringComparison.CurrentCultureIgnoreCase))
+      .ToListAsync();
+  }
   
   #endregion
 
@@ -101,6 +122,12 @@ public class WarehouseRepository : IWarehouseRepository
   public async Task<bool> CreateItemAsync(Item item)
   {
     await _context.Items.AddAsync(item);
+    return await SaveChangesAsync();
+  }
+
+  public async Task<bool> CreateOrderAsync(Order order)
+  {
+    await _context.Orders.AddAsync(order);
     return await SaveChangesAsync();
   }
   
@@ -149,6 +176,17 @@ public class WarehouseRepository : IWarehouseRepository
       return false;
     }
     _context.Items.Remove(item);
+    return await SaveChangesAsync();
+  }
+
+  public async Task<bool> DeleteOrderAsync(int id)
+  {
+    var order = await _context.Orders.FindAsync(id);
+    if (order == null)
+    {
+      return false;
+    }
+    _context.Orders.Remove(order);
     return await SaveChangesAsync();
   }
 
