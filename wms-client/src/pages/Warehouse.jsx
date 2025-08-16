@@ -5,6 +5,8 @@ import WarehouseOverview from '../components/warehouse/WarehouseOverview';
 import Sections from '../components/warehouse/Sections';
 import { getWarehouse } from '../utils/http/gets';
 import Loading from '../components/Loading';
+import NotFound from '../components/NotFound';
+import GoBack from '../components/GoBack';
 
 const Warehouse = () => {
   const { id } = useParams();
@@ -47,27 +49,17 @@ const Warehouse = () => {
       transition: { duration: 0.6 },
     },
   };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
   
   if (loading) {
     return <Loading />;
   }
 
   if (!warehouse) {
-    return <div>Warehouse not found</div>;
+    return <NotFound />;
   }
 
   return (
-    <div>
+    <div className="min-h-screen gradient-bg">
       <motion.div
         variants={containerVariants}
         initial={{ opacity: 0, y: 20 }}
@@ -76,7 +68,12 @@ const Warehouse = () => {
         transition={{ duration: 0.3 }}
         className="container mx-auto px-4 py-8"
       >
-        <h1 className="text-3xl font-bold text-accent-800 mb-4">Warehouse: {warehouse.name}</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+          <h1 className="text-3xl font-bold text-accent-800">Warehouse: {warehouse.name}</h1>
+          <div className="flex justify-start sm:justify-end">
+            <GoBack />
+          </div>
+        </div>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <div className="align-center">
           <WarehouseOverview warehouse={warehouse} variants={itemVarients} />

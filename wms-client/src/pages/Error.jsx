@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import NotFound from '../components/NotFound';
 
 const Error = () => {
   const containerVariants = {
@@ -23,21 +24,9 @@ const Error = () => {
   };
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-    >
-      <motion.h1
-        variants={itemVarients}
-        initial="hidden"
-        animate="visible"
-        className="text-4xl font-bold gradient-text text-center"
-      >
-        Page Not Found
-      </motion.h1>
-    </motion.div>
+    <div className="min-h-screen gradient-bg">
+      <NotFound />
+    </div>
   );
 };
 

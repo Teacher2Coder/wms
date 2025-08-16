@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { getSection } from '../utils/http/gets';
 import SectionOverview from '../components/section/SectionOverview';
 import Loading from '../components/Loading';
+import GoBack from '../components/GoBack';
 
 const Section = () => {
 
@@ -38,15 +39,6 @@ const Section = () => {
     }
   };
 
-  const itemVarients = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  };
-
   const cardVariants = {
     hidden: { opacity: 0, y: 30, scale: 0.9 },
     visible: {
@@ -70,7 +62,12 @@ const Section = () => {
         transition={{ duration: 0.3 }}
         className="container mx-auto px-4 py-8"
       >
-        <h1 className="text-3xl font-bold text-accent-800 mb-4">Section: {section.name}</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+          <h1 className="text-3xl font-bold text-accent-800">Section: {section.name}</h1>
+          <div className="flex justify-start sm:justify-end">
+            <GoBack />
+          </div>
+        </div>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <motion.div 
           variants={containerVariants}
