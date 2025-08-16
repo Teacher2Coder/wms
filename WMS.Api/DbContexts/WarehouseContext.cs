@@ -62,22 +62,22 @@ public class WarehouseContext : DbContext
 
     modelBuilder.Entity<Product>()
       .HasData(
-        new Product("SKU001")
+        new Product("Product 1", "SKU001")
         {
           Id = 1,
           Description = "Product 1"
         },
-        new Product("SKU002")
+        new Product("Product 2", "SKU002")
         {
           Id = 2,
           Description = "Product 2"
         },
-        new Product("SKU003")
+        new Product("Product 3", "SKU003")
         {
           Id = 3,
           Description = "Product 3"
         },
-        new Product("SKU004")
+        new Product("Product 4", "SKU004")
         {
           Id = 4,
           Description = "Product 4"

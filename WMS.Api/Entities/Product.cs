@@ -12,6 +12,10 @@ public class Product
 
   [Required]
   [MaxLength(100)]
+  public string Name { get; set; }
+
+  [Required]
+  [MaxLength(100)]
   public string Sku { get; set; }
 
   [MaxLength(500)]
@@ -19,8 +23,9 @@ public class Product
 
   public ICollection<Item> Items { get; set; } = new List<Item>();
 
-  public Product(string sku)
+  public Product(string name, string sku)
   {
+    Name = name;
     Sku = sku;
   }
 }

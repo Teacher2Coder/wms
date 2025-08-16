@@ -53,10 +53,25 @@ public class WarehouseRepository : IWarehouseRepository
       .FirstOrDefaultAsync(p => p.Id == id);
   }
 
+  public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
+  {
+    return await _context.Products
+      .Include(p => p.Items)
+      .Where(p => p.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+      .ToListAsync();
+  }
+
   public async Task<Item?> GetItemByIdAsync(int id)
   {
     return await _context.Items
       .FirstOrDefaultAsync(i => i.Id == id);
+  }
+
+  public async Task<IEnumerable<Item>> GetItemsBySerialNumberAsync(string serialNumber)
+  {
+    return await _context.Items
+      .Where(i => i.SerialNumber.Contains(serialNumber, StringComparison.CurrentCultureIgnoreCase))
+      .ToListAsync();
   }
   
   #endregion

@@ -30,4 +30,12 @@ public class ItemController : ControllerBase
     var itemDto = _mapper.Map<ItemDto>(item);
     return Ok(itemDto);
   }
+
+  [HttpGet("search")]
+  public async Task<IActionResult> SearchItems(string serialNumber)
+  {
+    var items = await _warehouseRepository.GetItemsBySerialNumberAsync(serialNumber);
+    return Ok(items);
+  }
+
 }

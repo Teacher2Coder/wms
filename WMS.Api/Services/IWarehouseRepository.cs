@@ -10,7 +10,9 @@ public interface IWarehouseRepository
   Task<Section?> GetSectionByIdAsync(int id);
   Task<IEnumerable<Product>> GetAllProductsAsync();
   Task<Product?> GetProductByIdAsync(int id);
+  Task<IEnumerable<Product>> GetProductsByNameAsync(string name);
   Task<Item?> GetItemByIdAsync(int id);
+  Task<IEnumerable<Item>> GetItemsBySerialNumberAsync(string serialNumber);
   
   Task<bool> CreateWarehouseAsync(Warehouse warehouse);
   Task<Section?> CreateSectionAsync(int warehouseId, Section section);

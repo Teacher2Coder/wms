@@ -53,7 +53,7 @@ const Product = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen gradient-bg">
       <motion.div
         variants={containerVariants}
         initial={{ opacity: 0, y: 20 }}

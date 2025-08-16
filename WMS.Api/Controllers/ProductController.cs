@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
+using WMS.Api.Entities;
 
 namespace WMS.Api.Controllers;
 
@@ -36,5 +37,42 @@ public class ProductController : ControllerBase
 
     var productDto = _mapper.Map<ProductDto>(product);
     return Ok(productDto);
+  }
+
+  [HttpGet("search")]
+  public async Task<IActionResult> SearchProducts(string name)
+  {
+    var products = await _warehouseRepository.GetProductsByNameAsync(name);
+    return Ok(products);
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> CreateProduct(ProductDto productDto)
+  {
+    var product = _mapper.Map<Product>(productDto);
+    await _warehouseRepository.CreateProductAsync(product);
+    return Ok(product);
+  }
+
+  [HttpPut("{productId}")]
+  public async Task<IActionResult> UpdateProduct(int productId, ProductDto productDto)
+  {
+    var product = await _warehouseRepository.GetProductByIdAsync(productId);
+    if (product == null)
+    {
+      return NotFound();
+    }
+
+    _mapper.Map(productDto, product);
+    await _warehouseRepository.SaveChangesAsync();
+    return Ok(product);
+  }
+
+  [HttpDelete("{productId}")]
+  public async Task<IActionResult> DeleteProduct(int productId)
+  {
+    await _warehouseRepository.DeleteProductAsync(productId);
+    await _warehouseRepository.SaveChangesAsync();
+    return Ok();
   }
 }

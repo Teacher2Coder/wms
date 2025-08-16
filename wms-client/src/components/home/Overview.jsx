@@ -33,12 +33,40 @@ const Overview = ({ itemVarients, warehouses }) => {
             </div>
 
             {/* Primary Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-12">
+              
+              {/* Total Warehouses Card */}
+              <motion.div 
+                whileHover={{ scale: 1.02, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.length}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Total Warehouses
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Across all warehouses
+                  </div>
+                </div>
+              </motion.div>
+
+              
               {/* Total Inventory Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
@@ -47,14 +75,16 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.totalInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  Total Items
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Across {warehouses.length} warehouse{warehouses.length !== 1 ? 's' : ''}
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.totalInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Total Items
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Across {warehouses.length} warehouse{warehouses.length !== 1 ? 's' : ''}
+                  </div>
                 </div>
               </motion.div>
 
@@ -62,7 +92,7 @@ const Overview = ({ itemVarients, warehouses }) => {
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-md">
@@ -71,14 +101,16 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.availableInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  Available
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Ready for use
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.availableInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Available
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Ready for use
+                  </div>
                 </div>
               </motion.div>
 
@@ -86,7 +118,7 @@ const Overview = ({ itemVarients, warehouses }) => {
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-md">
@@ -95,14 +127,16 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.reservedInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  Reserved
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Allocated orders
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.reservedInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Reserved
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Allocated orders
+                  </div>
                 </div>
               </motion.div>
 
@@ -110,7 +144,7 @@ const Overview = ({ itemVarients, warehouses }) => {
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
@@ -119,25 +153,27 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.inTransitInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  In Transit
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Moving between locations
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.inTransitInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    In Transit
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Moving between locations
+                  </div>
                 </div>
               </motion.div>
             </div>
 
             {/* Secondary Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
               {/* Damaged Inventory Card */}
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-md">
@@ -146,14 +182,16 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.damagedInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  Damaged
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Requires attention
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.damagedInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Damaged
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Requires attention
+                  </div>
                 </div>
               </motion.div>
 
@@ -161,7 +199,7 @@ const Overview = ({ itemVarients, warehouses }) => {
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-md">
@@ -170,14 +208,16 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.expiredInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  Expired
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Past expiration date
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.expiredInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Expired
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Past expiration date
+                  </div>
                 </div>
               </motion.div>
 
@@ -185,7 +225,7 @@ const Overview = ({ itemVarients, warehouses }) => {
               <motion.div 
                 whileHover={{ scale: 1.02, y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
+                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 h-full flex flex-col"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-md">
@@ -194,20 +234,22 @@ const Overview = ({ itemVarients, warehouses }) => {
                     </svg>
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-accent-800 mb-1">
-                  {warehouses.reduce((total, warehouse) => total + warehouse.outOfStockInventory, 0).toLocaleString()}
-                </div>
-                <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
-                  Out of Stock
-                </div>
-                <div className="text-xs text-accent-400 mt-2">
-                  Needs restocking
+                <div className="flex-grow">
+                  <div className="text-3xl font-bold text-accent-800 mb-1">
+                    {warehouses.reduce((total, warehouse) => total + warehouse.outOfStockInventory, 0).toLocaleString()}
+                  </div>
+                  <div className="text-sm font-medium text-accent-500 uppercase tracking-wide">
+                    Out of Stock
+                  </div>
+                  <div className="text-xs text-accent-400 mt-2">
+                    Needs restocking
+                  </div>
                 </div>
               </motion.div>
             </div>
 
             {/* Action Section */}
-            <div className="text-center">
+            <div className="text-center mt-8">
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
