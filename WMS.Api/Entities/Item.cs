@@ -24,6 +24,11 @@ public class Item
 
   public Section? Section { get; set; }
 
+  [ForeignKey("OrderId")]
+  public int? OrderId { get; set; }
+
+  public Order? Order { get; set; }
+
   // Parameterless constructor for Entity Framework
   public Item()
   {

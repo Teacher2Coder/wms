@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
@@ -8,6 +9,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/warehouse")]
+[Authorize] // Require authentication for all warehouse operations
 public class WarehouseController : ControllerBase
 {
   private readonly IMapper _mapper;
@@ -46,6 +48,7 @@ public class WarehouseController : ControllerBase
   }
 
   [HttpPost]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can create warehouses
   public async Task<IActionResult> CreateWarehouse(WarehouseDto warehouseDto)
   {
     var warehouse = _mapper.Map<Warehouse>(warehouseDto);
@@ -60,6 +63,7 @@ public class WarehouseController : ControllerBase
   }
 
   [HttpPut("{id}")]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can update warehouses
   public async Task<IActionResult> UpdateWarehouse(int id, WarehouseDto warehouseDto)
   {
     var warehouseToUpdate = await _warehouseRepository.GetWarehouseByIdAsync(id);
@@ -76,6 +80,7 @@ public class WarehouseController : ControllerBase
   }
 
   [HttpDelete("{id}")]
+  [Authorize(Roles = "Admin")] // Only Admin can delete warehouses
   public async Task<IActionResult> DeleteWarehouse(int id)
   {
     var warehouseToDelete = await _warehouseRepository.GetWarehouseByIdAsync(id);

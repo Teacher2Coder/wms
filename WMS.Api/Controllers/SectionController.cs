@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
@@ -8,6 +9,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/warehouse/{warehouseId}/section")]
+[Authorize] // Require authentication for all section operations
 public class SectionController : ControllerBase
 {
   private readonly IMapper _mapper;
@@ -33,6 +35,7 @@ public class SectionController : ControllerBase
   }
 
   [HttpPost]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can create sections
   public async Task<IActionResult> CreateSection(int warehouseId, SectionDto sectionDto)
   {
     // Verify warehouse exists
@@ -59,6 +62,7 @@ public class SectionController : ControllerBase
   }
 
   [HttpPut("{sectionId}")]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can update sections
   public async Task<IActionResult> UpdateSection(int warehouseId, int sectionId, SectionDto sectionDto)
   {
     var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(warehouseId);
@@ -85,6 +89,7 @@ public class SectionController : ControllerBase
   }
 
   [HttpDelete("{sectionId}")]
+  [Authorize(Roles = "Admin")] // Only Admin can delete sections
   public async Task<IActionResult> DeleteSection(int warehouseId, int sectionId)
   {
     var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(warehouseId);

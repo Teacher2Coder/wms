@@ -1,6 +1,66 @@
-@WMS.Api_HostAddress = http://localhost:5027
+# WMS API Authentication Testing
+# Use this file to test the authentication endpoints
 
-GET {{WMS.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### Login with admin credentials
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
 
-###
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Login with manager credentials
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "manager",
+  "password": "manager123"
+}
+
+### Get current user info (requires authentication)
+GET http://localhost:5000/api/auth/me
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+### Get all users (Admin/Manager only)
+GET http://localhost:5000/api/auth/users
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+### Register a new user (Admin/Manager only)
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "username": "employee1",
+  "password": "employee123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "Employee"
+}
+
+### Change password (authenticated users)
+POST http://localhost:5000/api/auth/change-password
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "currentPassword": "admin123",
+  "newPassword": "newpassword123"
+}
+
+### Test protected warehouse endpoint
+GET http://localhost:5000/api/warehouse
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+### Test creating warehouse (Admin/Manager only)
+POST http://localhost:5000/api/warehouse
+Content-Type: application/json
+Authorization: Bearer YOUR_JWT_TOKEN_HERE
+
+{
+  "name": "Test Warehouse",
+  "location": "Test Location",
+  "description": "Test warehouse created via API"
+}

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
@@ -8,6 +9,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/product")]
+[Authorize] // Require authentication for all product operations
 public class ProductController : ControllerBase
 {
   private readonly IMapper _mapper;
@@ -47,6 +49,7 @@ public class ProductController : ControllerBase
   }
 
   [HttpPost]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can create products
   public async Task<IActionResult> CreateProduct(ProductDto productDto)
   {
     var product = _mapper.Map<Product>(productDto);
@@ -55,6 +58,7 @@ public class ProductController : ControllerBase
   }
 
   [HttpPut("{productId}")]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can update products
   public async Task<IActionResult> UpdateProduct(int productId, ProductDto productDto)
   {
     var product = await _warehouseRepository.GetProductByIdAsync(productId);
@@ -69,6 +73,7 @@ public class ProductController : ControllerBase
   }
 
   [HttpDelete("{productId}")]
+  [Authorize(Roles = "Admin")] // Only Admin can delete products
   public async Task<IActionResult> DeleteProduct(int productId)
   {
     await _warehouseRepository.DeleteProductAsync(productId);

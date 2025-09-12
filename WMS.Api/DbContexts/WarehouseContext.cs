@@ -20,6 +20,8 @@ public class WarehouseContext : DbContext
 
   public DbSet<Order> Orders { get; set; }
 
+  public DbSet<User> Users { get; set; }
+
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.Entity<Warehouse>()
@@ -105,6 +107,41 @@ public class WarehouseContext : DbContext
         new Item(3, "SKU003") { Id = 15, SerialNumber = "SKU003-15" },
         new Item(4, "SKU004") { Id = 16, SerialNumber = "SKU004-16" }
       );
+
+    // Configure User entity
+    modelBuilder.Entity<User>(entity =>
+    {
+      entity.HasIndex(u => u.Username).IsUnique();
+      entity.Property(u => u.Role).HasConversion<string>();
+    });
+
+    // Seed default users (passwords are hashed versions of "admin123" and "manager123")
+    modelBuilder.Entity<User>()
+      .HasData(
+        new User
+        {
+          Id = 1,
+          Username = "admin",
+          PasswordHash = "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewqLUHhYvJvkHgTi", // admin123
+          Role = Role.Admin,
+          FirstName = "System",
+          LastName = "Administrator",
+          CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+          IsActive = true
+        },
+        new User
+        {
+          Id = 2,
+          Username = "manager",
+          PasswordHash = "$2a$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi", // manager123
+          Role = Role.Manager,
+          FirstName = "Warehouse",
+          LastName = "Manager",
+          CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+          IsActive = true
+        }
+      );
+      
     base.OnModelCreating(modelBuilder);
   }
 }

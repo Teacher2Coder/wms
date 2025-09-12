@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
@@ -7,6 +8,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/item")]
+[Authorize] // Require authentication for all item operations
 public class ItemController : ControllerBase
 {
   private readonly IMapper _mapper;

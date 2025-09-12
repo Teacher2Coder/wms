@@ -1,5 +1,8 @@
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Serilog;
 
 using WMS.Api.DbContexts;
@@ -52,6 +55,7 @@ builder.Services.AddDbContext<WarehouseContext>(
 );
 
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -65,6 +69,31 @@ builder.Services.AddCors(options =>
       .AllowAnyMethod();
   });
 });
+
+// Add Authentication
+builder.Services.AddAuthentication(options =>
+{
+  options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+  options.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+    ValidAudience = builder.Configuration["Jwt:Audience"],
+    IssuerSigningKey = new SymmetricSecurityKey(
+      Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? 
+        throw new InvalidOperationException("JWT Key not configured"))),
+    ClockSkew = TimeSpan.Zero
+  };
+});
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -94,6 +123,10 @@ app.UseRouting();
 
 // Use CORS
 app.UseCors("AllowReactApp");
+
+// Use Authentication and Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
@@ -8,6 +9,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/order")]
+[Authorize] // Require authentication for all order operations
 public class OrderController : ControllerBase
 {
   private readonly IMapper _mapper;
@@ -41,6 +43,7 @@ public class OrderController : ControllerBase
   }
 
   [HttpPost]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can create orders
   public async Task<IActionResult> CreateOrder(OrderDto orderDto)
   {
     var order = _mapper.Map<Order>(orderDto);
@@ -49,6 +52,7 @@ public class OrderController : ControllerBase
   }
 
   [HttpPut("{orderId}")]
+  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can update orders
   public async Task<IActionResult> UpdateOrder(int orderId, OrderDto orderDto)
   {
     var order = await _warehouseRepository.GetOrderByIdAsync(orderId);
@@ -63,6 +67,7 @@ public class OrderController : ControllerBase
   }
 
   [HttpDelete("{orderId}")]
+  [Authorize(Roles = "Admin")] // Only Admin can delete orders
   public async Task<IActionResult> DeleteOrder(int orderId)
   {
     await _warehouseRepository.DeleteOrderAsync(orderId);
