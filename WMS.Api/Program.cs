@@ -99,6 +99,47 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
+// Ensure database is created and seed default users
+using (var scope = app.Services.CreateScope())
+{
+  var context = scope.ServiceProvider.GetRequiredService<WarehouseContext>();
+  context.Database.EnsureCreated();
+  
+  // Create default users if they don't exist
+  if (!context.Users.Any())
+  {
+    var adminHash = BCrypt.Net.BCrypt.HashPassword("admin123", 12);
+    var managerHash = BCrypt.Net.BCrypt.HashPassword("manager123", 12);
+    
+    var adminUser = new WMS.Api.Entities.User
+    {
+      Username = "admin",
+      PasswordHash = adminHash,
+      Role = WMS.Api.Entities.Role.Admin,
+      FirstName = "System",
+      LastName = "Administrator",
+      CreatedAt = DateTime.UtcNow,
+      IsActive = true
+    };
+    
+    var managerUser = new WMS.Api.Entities.User
+    {
+      Username = "manager",
+      PasswordHash = managerHash,
+      Role = WMS.Api.Entities.Role.Manager,
+      FirstName = "Warehouse",
+      LastName = "Manager",
+      CreatedAt = DateTime.UtcNow,
+      IsActive = true
+    };
+    
+    context.Users.AddRange(adminUser, managerUser);
+    context.SaveChanges();
+    
+    Log.Information("Default users created successfully");
+  }
+}
+
 if (!app.Environment.IsDevelopment())
 {
   app.UseExceptionHandler();

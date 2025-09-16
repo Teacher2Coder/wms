@@ -115,32 +115,7 @@ public class WarehouseContext : DbContext
       entity.Property(u => u.Role).HasConversion<string>();
     });
 
-    // Seed default users (passwords are hashed versions of "admin123" and "manager123")
-    modelBuilder.Entity<User>()
-      .HasData(
-        new User
-        {
-          Id = 1,
-          Username = "admin",
-          PasswordHash = "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewqLUHhYvJvkHgTi", // admin123
-          Role = Role.Admin,
-          FirstName = "System",
-          LastName = "Administrator",
-          CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-          IsActive = true
-        },
-        new User
-        {
-          Id = 2,
-          Username = "manager",
-          PasswordHash = "$2a$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi", // manager123
-          Role = Role.Manager,
-          FirstName = "Warehouse",
-          LastName = "Manager",
-          CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-          IsActive = true
-        }
-      );
+    // Note: Default users will be created programmatically in Program.cs with proper password hashing
       
     base.OnModelCreating(modelBuilder);
   }
