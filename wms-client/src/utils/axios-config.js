@@ -24,13 +24,19 @@ axios.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Token is expired or invalid
-      localStorage.removeItem('token');
-      delete axios.defaults.headers.common['Authorization'];
+      // Only auto-logout if the request was to an auth endpoint or had a token
+      const wasAuthenticatedRequest = error.config?.headers?.Authorization;
+      const isAuthEndpoint = error.config?.url?.includes('/auth/');
       
-      // Redirect to login page if not already there
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      if (wasAuthenticatedRequest && !isAuthEndpoint) {
+        console.log('Authentication failed - token may be expired');
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
+        
+        // Redirect to login page if not already there
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
       }
     }
     return Promise.reject(error);

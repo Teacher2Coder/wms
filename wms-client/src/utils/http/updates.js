@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios-config.js';
 
 const updateItem = async (itemId, item) => {
   try {

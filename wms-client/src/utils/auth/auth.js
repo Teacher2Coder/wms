@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios-config.js';
 
 const login = async (username, password) => {
   const response = await axios.post('/api/auth/login', { username, password });

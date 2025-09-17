@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axios from '../utils/axios-config.js'; // Use the configured axios instance
 import auth from '../utils/auth/auth.js';
 
 const AuthContext = createContext();
@@ -20,9 +21,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       // Set the authorization header for all requests
-      import('axios').then(axios => {
-        axios.default.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      });
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      // Remove authorization header when no token
+      delete axios.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
@@ -60,7 +62,6 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
 
       // Set axios default header
-      const axios = (await import('axios')).default;
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
 
       return { success: true, user: userData };
@@ -79,9 +80,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     
     // Remove axios default header
-    import('axios').then(axios => {
-      delete axios.default.defaults.headers.common['Authorization'];
-    });
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   const register = async (userData) => {

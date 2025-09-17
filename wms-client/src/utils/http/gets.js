@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios-config.js';
 
 const getWarehouses = async () => {
   const response = await axios.get('/api/warehouse');
