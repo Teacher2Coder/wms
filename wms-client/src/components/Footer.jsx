@@ -7,6 +7,11 @@ const Footer = () => {
     { label: 'Home', path: '/' },
     { label: 'Product Management', path: '/products' },
   ];
+
+  // Don't render footer on login page
+  if (location.pathname === '/login') {
+    return null;
+  }
   
   return (
     <footer className="bg-white dark:bg-accent-900 border-t border-gray-200 dark:border-accent-700">

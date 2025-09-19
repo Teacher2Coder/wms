@@ -43,7 +43,10 @@ else
 builder.Services.AddControllers(options =>
 {
   options.ReturnHttpNotAcceptable = true;
-}).AddNewtonsoftJson()
+}).AddNewtonsoftJson(options =>
+{
+  options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+})
 .AddXmlDataContractSerializerFormatters();
 
 builder.Services.AddProblemDetails();

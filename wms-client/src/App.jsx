@@ -7,6 +7,9 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import Profile from './pages/Profile.jsx';
+import Manage from './pages/Manage.jsx';
+import Admin from './pages/Admin.jsx';
 import Warehouse from './pages/Warehouse.jsx';
 import Section from './pages/Section.jsx';
 import Error from './pages/Error.jsx';
@@ -21,13 +24,28 @@ const AppContent = () => {
   return (
     <div className='app'>
       <Navbar />
-      <main className='app pt-20'>
+      <main className={`app ${location.pathname === '/login' ? 'pt-0' : 'pt-20'}`}>
         <AnimatePresence mode='wait'>
           <Routes location={location} key={location.pathname}>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={
               <ProtectedRoute requiredRoles={['Admin', 'Manager']}>
                 <Register />
+              </ProtectedRoute>
+            } />
+            <Route path='/profile' element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path='/manage' element={
+              <ProtectedRoute requiredRoles={['Admin', 'Manager']}>
+                <Manage />
+              </ProtectedRoute>
+            } />
+            <Route path='/admin' element={
+              <ProtectedRoute requiredRoles={['Admin']}>
+                <Admin />
               </ProtectedRoute>
             } />
             <Route path='/' element={

@@ -126,6 +126,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (profileData) => {
+    try {
+      await auth.updateProfile(profileData);
+      // Refresh user data after successful update
+      const updatedUser = await auth.myInfo();
+      setUser(updatedUser);
+      return { success: true };
+    } catch (error) {
+      console.error('Profile update failed:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Profile update failed.' 
+      };
+    }
+  };
+
+  // Handle both numeric and string role values
+  const getRoleString = (role) => {
+    if (typeof role === 'number') {
+      return role === 0 ? 'Admin' : role === 1 ? 'Manager' : 'Employee';
+    }
+    return role;
+  };
+
+  const userRole = getRoleString(user?.role);
+  const isAdmin = userRole === 'Admin';
+  const isManager = userRole === 'Manager';
+  const isEmployee = userRole === 'Employee';
+  const canManage = userRole === 'Admin' || userRole === 'Manager';
+
   const value = {
     user,
     token,
@@ -135,11 +165,12 @@ export const AuthProvider = ({ children }) => {
     register,
     changePassword,
     updateUserInfo,
+    updateProfile,
     isAuthenticated: !!user,
-    isAdmin: user?.role === 'Admin',
-    isManager: user?.role === 'Manager',
-    isEmployee: user?.role === 'Employee',
-    canManage: user?.role === 'Admin' || user?.role === 'Manager'
+    isAdmin,
+    isManager,
+    isEmployee,
+    canManage
   };
 
   return (

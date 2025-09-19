@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WMS.Api.Models;
+using WMS.Api.Entities;
 using WMS.Api.Services;
 
 namespace WMS.Api.Controllers;
@@ -124,6 +126,31 @@ public class AuthController : ControllerBase
     return Ok(user);
   }
 
+  [HttpPut("profile")]
+  [Authorize]
+  public async Task<IActionResult> UpdateProfile([FromBody] UserDto userDto)
+  {
+    if (!ModelState.IsValid)
+    {
+      return BadRequest(ModelState);
+    }
+
+    var userId = GetCurrentUserId();
+    if (userId == null)
+    {
+      return Unauthorized();
+    }
+
+    var success = await _authService.UpdateUserAsync(userId.Value, userDto);
+    if (!success)
+    {
+      return BadRequest(new { message = "Failed to update profile. Username may already exist." });
+    }
+
+    _logger.LogInformation("User {UserId} updated their profile successfully", userId);
+    return Ok(new { message = "Profile updated successfully" });
+  }
+
   [HttpPut("users/{id}")]
   [Authorize(Roles = "Admin")]
   public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto)
@@ -186,8 +213,8 @@ public class AuthController : ControllerBase
     }
 
     // For simplicity, we'll generate a new token with the current user data
-    // In a production app, you might want to implement refresh tokens
-    var userEntity = new WMS.Api.Entities.User
+    // May need to implement refresh tokens
+    var userEntity = new User
     {
       Id = user.Id,
       Username = user.Username,
@@ -211,7 +238,8 @@ public class AuthController : ControllerBase
 
   private int? GetCurrentUserId()
   {
-    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
+                      User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
     return int.TryParse(userIdClaim, out var userId) ? userId : null;
   }
 }

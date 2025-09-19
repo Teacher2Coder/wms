@@ -17,7 +17,6 @@ const CreateWarehouseModal = ({ isOpen, onClose, onCreate }) => {
     e.preventDefault();
     try {
       const warehouse = await createWarehouse(formData);
-      console.log(warehouse);
       if (warehouse) {
         onClose();
         window.location.href = `/warehouse/${warehouse.id}`;

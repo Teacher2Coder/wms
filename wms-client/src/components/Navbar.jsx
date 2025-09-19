@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Settings, UserPlus } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, UserPlus, Crown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import handleSmoothScroll from '../utils/handleSmoothScroll';
 
@@ -9,7 +9,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
-  const { user, logout, isAuthenticated, canManage } = useAuth();
+  const { user, logout, isAuthenticated, canManage, isAdmin } = useAuth();
 
   useEffect(() => {
     setIsOpen(false);
@@ -122,15 +122,45 @@ const Navbar = () => {
                         </p>
                       </div>
                       
-                      {canManage && (
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <User className="w-4 h-4 mr-3" />
+                        View Profile
+                      </Link>
+                      
+                      {isAdmin && (
                         <Link
-                          to="/register"
+                          to="/admin"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                           onClick={() => setUserMenuOpen(false)}
                         >
-                          <UserPlus className="w-4 h-4 mr-3" />
-                          Register New User
+                          <Crown className="w-4 h-4 mr-3" />
+                          Admin Dashboard
                         </Link>
+                      )}
+                      
+                      {canManage && (
+                        <>
+                          <Link
+                            to="/manage"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            <Settings className="w-4 h-4 mr-3" />
+                            Management Dashboard
+                          </Link>
+                          <Link
+                            to="/register"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                            onClick={() => setUserMenuOpen(false)}
+                          >
+                            <UserPlus className="w-4 h-4 mr-3" />
+                            Register New User
+                          </Link>
+                        </>
                       )}
                       
                       <button
@@ -214,26 +244,71 @@ const Navbar = () => {
 
                 {/* Mobile Auth Actions */}
                 <div className="border-t border-gray-200 pt-2 mt-2">
-                  {canManage && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: navItems.length * 0.1 }}
+                  >
+                    <Link
+                      to="/profile"
+                      className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
+                    >
+                      <User className="w-4 h-4 mr-3" />
+                      View Profile
+                    </Link>
+                  </motion.div>
+                  
+                  {isAdmin && (
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: navItems.length * 0.1 }}
+                      transition={{ delay: (navItems.length + 1) * 0.1 }}
                     >
                       <Link
-                        to="/register"
+                        to="/admin"
                         className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
                       >
-                        <UserPlus className="w-4 h-4 mr-3" />
-                        Register New User
+                        <Crown className="w-4 h-4 mr-3" />
+                        Admin Dashboard
                       </Link>
                     </motion.div>
+                  )}
+                  
+                  {canManage && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (navItems.length + 2) * 0.1 }}
+                      >
+                        <Link
+                          to="/manage"
+                          className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
+                        >
+                          <Settings className="w-4 h-4 mr-3" />
+                          Management Dashboard
+                        </Link>
+                      </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (navItems.length + 3) * 0.1 }}
+                      >
+                        <Link
+                          to="/register"
+                          className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
+                        >
+                          <UserPlus className="w-4 h-4 mr-3" />
+                          Register New User
+                        </Link>
+                      </motion.div>
+                    </>
                   )}
                   
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 1) * 0.1 }}
+                    transition={{ delay: (navItems.length + 4) * 0.1 }}
                   >
                     <button
                       onClick={handleLogout}

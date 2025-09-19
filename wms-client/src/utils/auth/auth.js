@@ -35,6 +35,11 @@ const deleteUser = async (id) => {
   return response.data;
 }
 
+const updateProfile = async (profileData) => {
+  const response = await axios.put('/api/auth/profile', profileData);
+  return response.data;
+}
+
 export default { 
   login,
   myInfo,
@@ -42,5 +47,6 @@ export default {
   changePassword,
   getAllUsers,
   updateUser,
-  deleteUser 
+  deleteUser,
+  updateProfile 
 };

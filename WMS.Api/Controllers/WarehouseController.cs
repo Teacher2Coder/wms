@@ -48,7 +48,7 @@ public class WarehouseController : ControllerBase
   }
 
   [HttpPost]
-  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can create warehouses
+  [Authorize(Roles = "Admin")] // Only Admin can create warehouses
   public async Task<IActionResult> CreateWarehouse(WarehouseDto warehouseDto)
   {
     var warehouse = _mapper.Map<Warehouse>(warehouseDto);
@@ -63,7 +63,7 @@ public class WarehouseController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  [Authorize(Roles = "Admin,Manager")] // Only Admin and Manager can update warehouses
+  [Authorize(Roles = "Admin")] // Only Admin can update warehouses
   public async Task<IActionResult> UpdateWarehouse(int id, WarehouseDto warehouseDto)
   {
     var warehouseToUpdate = await _warehouseRepository.GetWarehouseByIdAsync(id);
