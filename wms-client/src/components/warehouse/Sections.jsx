@@ -2,11 +2,13 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import CreateSectionModal from "./CreateSectionModal";
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
 
 const Sections = ({ sections, warehouseId, variants }) => {
 
   const [isCreateSectionModalOpen, setIsCreateSectionModalOpen] = useState(false);
+  const { canManage } = useAuth(); // Only Admin and Manager can create sections
   
   return (
     <div>
@@ -22,13 +24,17 @@ const Sections = ({ sections, warehouseId, variants }) => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-accent-800 mb-2">No Sections Found</h3>
-            <p className="text-accent-600">Add your first section to get started.</p>
-            <button 
-              className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 mt-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg" 
-              onClick={() => setIsCreateSectionModalOpen(true)}
-            >
-              Create a Section
-            </button>
+            <p className="text-accent-600">
+              {canManage ? 'Add your first section to get started.' : 'No sections are currently available.'}
+            </p>
+            {canManage && (
+              <button 
+                className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 mt-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg" 
+                onClick={() => setIsCreateSectionModalOpen(true)}
+              >
+                Create a Section
+              </button>
+            )}
           </div>
         </motion.div>
       )}

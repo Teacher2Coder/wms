@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { Eye, ExternalLink } from 'lucide-react';
 import CreateWarehouseModal from '../home/CreateWarehouseModal';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import handleSmoothScroll from '../../utils/handleSmoothScroll';
 
 const WarehouseCards = ({ itemVarients, warehouses, containerVariants, cardVariants }) => {  
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { canManage } = useAuth(); // Only Admin and Manager can create warehouses
   
   return (
     <div>
@@ -31,13 +33,22 @@ const WarehouseCards = ({ itemVarients, warehouses, containerVariants, cardVaria
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-accent-800 mb-2">No Warehouses Found</h3>
-              <p className="text-accent-600">Start by adding your first warehouse to get started.</p>
-              <button 
-                className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 mt-4 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg" 
-                onClick={() => setIsCreateModalOpen(true)}
-              >
-                Create a Warehouse
-              </button>
+              <p className="text-accent-600 mb-6">
+                {canManage ? 'Start by adding your first warehouse to get started.' : 'No warehouses are currently available.'}
+              </p>
+              {canManage && (
+                <motion.button 
+                  className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg" 
+                  onClick={() => setIsCreateModalOpen(true)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.3 }}
+                >
+                  Create a Warehouse
+                </motion.button>
+              )}
             </div>
             <CreateWarehouseModal 
               isOpen={isCreateModalOpen}
@@ -47,7 +58,7 @@ const WarehouseCards = ({ itemVarients, warehouses, containerVariants, cardVaria
         ) : (
           /* Warehouse Table */
           <motion.div 
-            variants={containerVariants}
+            variants={itemVarients}
             className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-glow border border-white/50 overflow-hidden"
           >
             <div className="overflow-x-auto">
@@ -65,7 +76,12 @@ const WarehouseCards = ({ itemVarients, warehouses, containerVariants, cardVaria
                     <th className="px-6 py-4 text-center text-sm font-semibold text-accent-800">Out of Stock</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-accent-200">
+                <motion.tbody 
+                  className="divide-y divide-accent-200"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
                   {warehouses.map((warehouse, index) => (
                     <motion.tr
                       key={warehouse.id}
@@ -142,7 +158,7 @@ const WarehouseCards = ({ itemVarients, warehouses, containerVariants, cardVaria
                       </td>
                     </motion.tr>
                   ))}
-                </tbody>
+                </motion.tbody>
               </table>
             </div>
           </motion.div>

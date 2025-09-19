@@ -110,7 +110,7 @@ const Navbar = () => {
                         <p className="text-sm font-medium text-gray-900">
                           {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-sm text-gray-500">{user?.username}</p>
+                        <p className="text-sm text-gray-500">{user?.role}</p>
                         <p className="text-xs text-gray-400 mt-1">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             user?.role === 'Admin' ? 'bg-red-100 text-red-800' :
@@ -142,7 +142,7 @@ const Navbar = () => {
                         </Link>
                       )}
                       
-                      {canManage && (
+                      {canManage && !isAdmin && (
                         <>
                           <Link
                             to="/manage"
@@ -208,7 +208,7 @@ const Navbar = () => {
                   <p className="text-sm font-medium text-gray-900">
                     {user?.firstName} {user?.lastName}
                   </p>
-                  <p className="text-sm text-gray-500">{user?.username}</p>
+                  <p className="text-sm text-gray-500">{user?.role}</p>
                   <p className="text-xs text-gray-400 mt-1">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       user?.role === 'Admin' ? 'bg-red-100 text-red-800' :

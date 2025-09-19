@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Settings } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import WarehouseSettings from './WarehouseSettings';
 import CreateSectionModal from './CreateSectionModal';
 import DeleteModal from "../DeleteModal";
@@ -10,6 +11,7 @@ const WarehouseOverview = ({ warehouse, variants }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCreateSectionModalOpen, setIsCreateSectionModalOpen] = useState(false);
+  const { canManage, isAdmin } = useAuth(); // Role-based permissions
   
   const handleSwitchDelete = () => {
     setIsSettingsModalOpen(false);
@@ -49,12 +51,14 @@ const WarehouseOverview = ({ warehouse, variants }) => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setIsSettingsModalOpen(true)}
-            className="p-3 rounded-xl bg-accent-100 hover:bg-accent-200 text-accent-600 hover:text-accent-700 transition-all duration-200 hover:scale-105"
-          >
-            <Settings className="w-6 h-6" />
-          </button>
+          {isAdmin && (
+            <button
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="p-3 rounded-xl bg-accent-100 hover:bg-accent-200 text-accent-600 hover:text-accent-700 transition-all duration-200 hover:scale-105"
+            >
+              <Settings className="w-6 h-6" />
+            </button>
+          )}
         </div>
 
         {/* Basic Info */}
@@ -88,18 +92,20 @@ const WarehouseOverview = ({ warehouse, variants }) => {
           </div>
         </div>
 
-        {/* Action Button */}
-        <div className="flex justify-end">
-          <button
-            className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2" 
-            onClick={() => setIsCreateSectionModalOpen(true)}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span>Create Section</span>
-          </button>
-        </div>
+        {/* Action Button - Only show for Admin/Manager */}
+        {canManage && (
+          <div className="flex justify-end">
+            <button
+              className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2" 
+              onClick={() => setIsCreateSectionModalOpen(true)}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span>Create Section</span>
+            </button>
+          </div>
+        )}
       </motion.div>
 
       {/* Stats Section */}

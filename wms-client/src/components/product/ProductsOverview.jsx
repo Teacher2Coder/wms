@@ -2,9 +2,11 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import CreateProductModal from './CreateProductModal';
 import DeleteModal from '../DeleteModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 const ProductsOverview = ({ products, variants }) => {
   const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
+  const { canManage } = useAuth(); // Only Admin and Manager can create products
   
   // Calculate statistics from products data
   const totalProducts = products ? products.length : 0;
@@ -78,18 +80,20 @@ const ProductsOverview = ({ products, variants }) => {
           </div>
         </div>
 
-        {/* Action Button */}
-        <div className="flex justify-end">
-          <button
-            className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2" 
-            onClick={() => setIsCreateProductModalOpen(true)}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span>Create Product</span>
-          </button>
-        </div>
+        {/* Action Button - Only show for Admin/Manager */}
+        {canManage && (
+          <div className="flex justify-end">
+            <button
+              className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2" 
+              onClick={() => setIsCreateProductModalOpen(true)}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span>Create Product</span>
+            </button>
+          </div>
+        )}
       </motion.div>
 
       {/* Stats Section */}

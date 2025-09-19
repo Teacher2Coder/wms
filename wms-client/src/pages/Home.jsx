@@ -30,30 +30,36 @@ const Home = () => {
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.6,
-        staggerChildren: 0.2,
-        delay: 0.3,
+        duration: 0.4,
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
       },
     }
   };
 
   const itemVarients = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6 },
+      transition: { 
+        duration: 0.4,
+        ease: "easeOut"
+      },
     },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
-    visible: {
+    hidden: { opacity: 0, y: 20 },
+    visible: (index) => ({
       opacity: 1,
       y: 0,
-      scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
+      transition: { 
+        duration: 0.4,
+        ease: "easeOut",
+        delay: index * 0.05 // Subtle stagger for table rows
+      },
+    }),
   };
 
   if (loading) {
@@ -77,22 +83,6 @@ const Home = () => {
           >
             Warehouse Management
           </motion.h1>
-          <motion.p
-            variants={itemVarients}
-            className="text-xl text-accent-700 mb-8 max-w-2xl mx-auto leading-relaxed"
-          >
-            Streamline your inventory operations with our comprehensive warehouse management system
-          </motion.p>
-          <motion.div
-            variants={itemVarients}
-            className="flex justify-center mb-12"
-          >
-            <img
-              src="/WMS.svg"
-              alt="WMS Logo"
-              className="w-32 h-32 animate-float filter drop-shadow-lg"
-            />
-          </motion.div>
         </div>
 
         <WarehouseCards 

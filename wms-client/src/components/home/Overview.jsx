@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import CreateWarehouseModal from './CreateWarehouseModal';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Overview = ({ itemVarients, warehouses }) => {
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { isAdmin } = useAuth(); // Only Admin and Manager can create warehouses
   
   return (
     <div>
@@ -248,20 +250,22 @@ const Overview = ({ itemVarients, warehouses }) => {
               </motion.div>
             </div>
 
-            {/* Action Section */}
-            <div className="text-center mt-8">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center space-x-3 mx-auto" 
-                onClick={() => setIsCreateModalOpen(true)}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                <span>Create New Warehouse</span>
-              </motion.button>
-            </div>
+            {/* Action Section - Only show for Admin */}
+            {isAdmin && (
+              <div className="text-center mt-8">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center space-x-3 mx-auto" 
+                  onClick={() => setIsCreateModalOpen(true)}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span>Create New Warehouse</span>
+                </motion.button>
+              </div>
+            )}
           </motion.div>
         )}
         <CreateWarehouseModal 
