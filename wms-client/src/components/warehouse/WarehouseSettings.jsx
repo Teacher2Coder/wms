@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { updateWarehouse } from '../../utils/http/updates';
+import { useAuth } from '../../contexts/AuthContext';
 
 const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
     Location: warehouse.location,
     Description: warehouse.description
   })
+
+  const { isAdmin } = useAuth(); // Only Admin can delete warehouses
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,7 +63,9 @@ const WarehouseSettings = ({ isOpen, onClose, onDelete, warehouse }) => {
           <div className="flex justify-end">
             <button type="button" onClick={onClose} className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</button>
             <button type="submit" onClick={handleSubmit} className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md mr-2">Edit</button>
-            <button type="button" onClick={onDelete} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
+            {isAdmin && (
+              <button type="button" onClick={onDelete} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
+            )}
           </div>
         </form>
       </motion.div>

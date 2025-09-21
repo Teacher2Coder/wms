@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { updateSection } from '../../utils/http/updates';
 
 const SectionSettings = ({ isOpen, onClose, onDelete, warehouseId, section }) => {
@@ -8,6 +9,8 @@ const SectionSettings = ({ isOpen, onClose, onDelete, warehouseId, section }) =>
     Name: section.name,
     Description: section.description
   })
+
+  const { isAdmin } = useAuth(); // Only Admin can delete sections
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,7 +57,9 @@ const SectionSettings = ({ isOpen, onClose, onDelete, warehouseId, section }) =>
           <div className="flex justify-end">
             <button type="button" onClick={onClose} className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</button>
             <button type="submit" onClick={handleSubmit} className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md mr-2">Edit</button>
-            <button type="button" onClick={onDelete} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
+            {isAdmin && (
+              <button type="button" onClick={onDelete} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
+            )}
           </div>
         </form>
       </motion.div>

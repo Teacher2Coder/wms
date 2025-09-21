@@ -19,10 +19,15 @@ const CreateWarehouseModal = ({ isOpen, onClose, onCreate }) => {
       const warehouse = await createWarehouse(formData);
       if (warehouse) {
         onClose();
+        onCreate(); // Call onCreate after successful creation
         window.location.href = `/warehouse/${warehouse.id}`;
+      } else {
+        console.error('Failed to create warehouse');
+        // You could add error handling here, like showing a toast message
       }
     } catch (err) {
-      console.error(err);
+      console.error('Error creating warehouse:', err);
+      // You could add error handling here, like showing a toast message
     }
   }
   
@@ -130,7 +135,6 @@ const CreateWarehouseModal = ({ isOpen, onClose, onCreate }) => {
             </button>
             <button 
               type="submit" 
-              onClick={onCreate}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-semibold transition-all duration-200 hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

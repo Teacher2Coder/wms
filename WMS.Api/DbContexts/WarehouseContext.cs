@@ -22,6 +22,8 @@ public class WarehouseContext : DbContext
 
   public DbSet<User> Users { get; set; }
 
+  public DbSet<Entities.Action> Actions { get; set; }
+
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.Entity<Warehouse>()
@@ -113,6 +115,19 @@ public class WarehouseContext : DbContext
     {
       entity.HasIndex(u => u.Username).IsUnique();
       entity.Property(u => u.Role).HasConversion<string>();
+    });
+
+    // Configure Action entity
+    modelBuilder.Entity<Entities.Action>(entity =>
+    {
+      entity.HasOne(a => a.User)
+            .WithMany()
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Restrict); // Prevent deletion of users who have logged actions
+      
+      entity.HasIndex(a => a.Timestamp);
+      entity.HasIndex(a => new { a.UserId, a.Timestamp });
+      entity.HasIndex(a => new { a.EntityType, a.EntityId });
     });
 
     // Note: Default users will be created programmatically in Program.cs with proper password hashing

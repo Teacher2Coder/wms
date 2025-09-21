@@ -45,9 +45,14 @@ const createWarehouse = async (warehouse) => {
     if (response.status === 201) {
       return response.data;
     }
+    console.error('Unexpected response status:', response.status);
     return null;
   } catch (err) {
-    console.error(err);
+    console.error('Error creating warehouse:', err);
+    if (err.response) {
+      console.error('Response data:', err.response.data);
+      console.error('Response status:', err.response.status);
+    }
     return null;
   }
 }

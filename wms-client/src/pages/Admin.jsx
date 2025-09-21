@@ -3,35 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Users, 
-  UserPlus, 
-  Package, 
-  Warehouse, 
-  ShoppingCart, 
-  BarChart3, 
   Settings, 
   Shield,
-  Edit3,
-  Trash2,
   Eye,
-  Building2,
-  Box,
   Database,
   Activity,
   TrendingUp,
-  Lock,
-  Unlock,
   Crown,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  RefreshCw,
   Download,
-  Upload,
   Server,
-  Globe
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import auth from '../utils/auth/auth.js';
+import Overview from '../components/admin/Overview.jsx';
+import UserManagement from '../components/admin/UserManagement.jsx';
+import SystemHealth from '../components/admin/SystemHealth.jsx';
+import Security from '../components/admin/Security.jsx';
+import DataManagement from '../components/admin/DataManagement.jsx';
+import Analytics from '../components/admin/Analytics.jsx';
+import handleSmoothScroll from '../utils/handleSmoothScroll';
 
 const Admin = () => {
   const { user, isAdmin } = useAuth();
@@ -56,6 +46,13 @@ const Admin = () => {
     systemUptime: '99.9%'
   });
 
+  const actions = [
+    { action: 'User registered', user: 'john.doe', time: '2 hours ago', type: 'user' },
+    { action: 'Product added', user: 'jane.smith', time: '4 hours ago', type: 'product' },
+    { action: 'Warehouse updated', user: 'mike.johnson', time: '6 hours ago', type: 'warehouse' },
+    { action: 'Order processed', user: 'sarah.wilson', time: '8 hours ago', type: 'order' }
+  ];
+
   // Redirect if user doesn't have admin permissions
   if (!isAdmin) {
     return (
@@ -70,6 +67,7 @@ const Admin = () => {
           </p>
           <Link
             to="/"
+            onClick={() => handleSmoothScroll()}
             className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
             Go to Dashboard
@@ -144,7 +142,7 @@ const Admin = () => {
     }
   };
 
-  const adminCards = [
+  const overviewCards = [
     {
       title: 'Total Users',
       description: 'All registered users in the system',
@@ -281,532 +279,40 @@ const Admin = () => {
         {/* Tab Content */}
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
-            <motion.div
-              key="overview"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
-            >
-              {/* Admin Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {adminCards.map((card, index) => (
-                  <motion.div
-                    key={card.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={card.action}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <div className={`p-3 rounded-lg ${card.color}`}>
-                        <card.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <span className="text-2xl font-bold text-gray-900">{card.count}</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{card.title}</h3>
-                    <p className="text-gray-600 text-sm">{card.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Quick Actions */}
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Administrative Actions</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {quickActions.map((action, index) => (
-                    <motion.div
-                      key={action.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
-                    >
-                      {action.link ? (
-                        <Link
-                          to={action.link}
-                          className="block bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-                        >
-                          <div className={`p-2 rounded-lg ${action.color} w-fit mb-3`}>
-                            <action.icon className="h-5 w-5 text-white" />
-                          </div>
-                          <h3 className="font-semibold text-gray-900 mb-1">{action.title}</h3>
-                          <p className="text-gray-600 text-sm">{action.description}</p>
-                        </Link>
-                      ) : (
-                        <button
-                          onClick={action.action}
-                          className="w-full text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-                        >
-                          <div className={`p-2 rounded-lg ${action.color} w-fit mb-3`}>
-                            <action.icon className="h-5 w-5 text-white" />
-                          </div>
-                          <h3 className="font-semibold text-gray-900 mb-1">{action.title}</h3>
-                          <p className="text-gray-600 text-sm">{action.description}</p>
-                        </button>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* System Status */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">System Status</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">API Server</p>
-                      <p className="text-sm text-green-600">Online</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Database</p>
-                      <p className="text-sm text-green-600">Connected</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-4 bg-blue-50 rounded-lg">
-                    <Globe className="h-8 w-8 text-blue-600" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Uptime</p>
-                      <p className="text-sm text-blue-600">{stats.systemUptime}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <Overview 
+              overviewCards={overviewCards}
+              quickActions={quickActions}
+              stats={stats}
+              actions={actions}
+            />
           )}
 
           {activeTab === 'users' && (
-            <motion.div
-              key="users"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="bg-white rounded-lg shadow-sm border border-gray-200"
-            >
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Advanced User Management</h2>
-                    <p className="text-gray-600 mt-1">Full administrative control over user accounts</p>
-                  </div>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={fetchUsers}
-                      className="flex items-center px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                    >
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Refresh
-                    </button>
-                    <Link
-                      to="/register"
-                      className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                    >
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Add User
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* User Statistics */}
-              <div className="p-6 border-b border-gray-200">
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{stats.totalUsers}</div>
-                    <div className="text-sm text-gray-600">Total</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{stats.activeUsers}</div>
-                    <div className="text-sm text-gray-600">Active</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">{stats.inactiveUsers}</div>
-                    <div className="text-sm text-gray-600">Inactive</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">{stats.adminUsers}</div>
-                    <div className="text-sm text-gray-600">Admins</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{stats.managerUsers}</div>
-                    <div className="text-sm text-gray-600">Managers</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{stats.employeeUsers}</div>
-                    <div className="text-sm text-gray-600">Employees</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6">
-                {loading ? (
-                  <div className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            User
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Role
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Created
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Last Login
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {users.map((userData) => (
-                          <tr key={userData.id} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
-                                  userData.role === 'Admin' ? 'bg-red-100' :
-                                  userData.role === 'Manager' ? 'bg-blue-100' :
-                                  'bg-green-100'
-                                }`}>
-                                  <span className={`text-sm font-medium ${
-                                    userData.role === 'Admin' ? 'text-red-700' :
-                                    userData.role === 'Manager' ? 'text-blue-700' :
-                                    'text-green-700'
-                                  }`}>
-                                    {userData.firstName?.[0]}{userData.lastName?.[0]}
-                                  </span>
-                                </div>
-                                <div className="ml-4">
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {userData.firstName} {userData.lastName}
-                                  </div>
-                                  <div className="text-sm text-gray-500">@{userData.username}</div>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                userData.role === 'Admin' ? 'bg-red-100 text-red-800' :
-                                userData.role === 'Manager' ? 'bg-blue-100 text-blue-800' :
-                                'bg-green-100 text-green-800'
-                              }`}>
-                                {userData.role === 'Admin' && <Crown className="h-3 w-3 mr-1" />}
-                                {userData.role}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                userData.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                              }`}>
-                                {userData.isActive ? 'Active' : 'Inactive'}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {new Date(userData.createdAt).toLocaleDateString()}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {userData.lastLoginAt ? 
-                                new Date(userData.lastLoginAt).toLocaleDateString() : 
-                                'Never'
-                              }
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                              <div className="flex items-center space-x-2">
-                                <button 
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                  title="View Details"
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </button>
-                                <button 
-                                  className="text-green-600 hover:text-green-900"
-                                  title="Edit User"
-                                >
-                                  <Edit3 className="h-4 w-4" />
-                                </button>
-                                <button 
-                                  onClick={() => handleToggleUserStatus(userData.id, userData.isActive)}
-                                  className={`${userData.isActive ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'}`}
-                                  title={userData.isActive ? 'Deactivate User' : 'Activate User'}
-                                >
-                                  {userData.isActive ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
-                                </button>
-                                {userData.id !== user?.id && (
-                                  <button 
-                                    onClick={() => handleDeleteUser(userData.id)}
-                                    className="text-red-600 hover:text-red-900"
-                                    title="Delete User"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </button>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </motion.div>
+            <UserManagement 
+              users={users}
+              loading={loading}
+              stats={stats}
+              user={user}
+              fetchUsers={fetchUsers}
+              handleToggleUserStatus={handleToggleUserStatus}
+              handleDeleteUser={handleDeleteUser} 
+            />
           )}
 
           {activeTab === 'system' && (
-            <motion.div
-              key="system"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">System Health Monitor</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-green-100">API Status</p>
-                        <p className="text-2xl font-bold">Online</p>
-                      </div>
-                      <Server className="h-8 w-8 text-green-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-blue-100">Database</p>
-                        <p className="text-2xl font-bold">Connected</p>
-                      </div>
-                      <Database className="h-8 w-8 text-blue-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-purple-100">Uptime</p>
-                        <p className="text-2xl font-bold">{stats.systemUptime}</p>
-                      </div>
-                      <Activity className="h-8 w-8 text-purple-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-orange-100">Last Backup</p>
-                        <p className="text-xl font-bold">Today</p>
-                      </div>
-                      <Download className="h-8 w-8 text-orange-200" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center py-8 text-gray-500">
-                  <Server className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p>System monitoring charts and logs would be displayed here</p>
-                  <p className="text-sm">Real-time performance metrics and alerts</p>
-                </div>
-              </div>
-            </motion.div>
+            <SystemHealth stats={stats} />
           )}
 
           {activeTab === 'security' && (
-            <motion.div
-              key="security"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Security Center</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-red-100">Failed Login Attempts</p>
-                        <p className="text-3xl font-bold">0</p>
-                      </div>
-                      <AlertTriangle className="h-8 w-8 text-red-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-green-100">Active Sessions</p>
-                        <p className="text-3xl font-bold">{stats.activeUsers}</p>
-                      </div>
-                      <Shield className="h-8 w-8 text-green-200" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Shield className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="font-medium text-gray-900">JWT Authentication</p>
-                        <p className="text-sm text-gray-600">Token-based authentication enabled</p>
-                      </div>
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                      Active
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Lock className="h-5 w-5 text-blue-600" />
-                      <div>
-                        <p className="font-medium text-gray-900">Password Encryption</p>
-                        <p className="text-sm text-gray-600">BCrypt hashing with salt rounds</p>
-                      </div>
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                      Secure
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <Security stats={stats} />
           )}
 
           {activeTab === 'data' && (
-            <motion.div
-              key="data"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Data Management</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Backup & Restore</h3>
-                    <div className="space-y-3">
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        <Download className="h-5 w-5 mr-2" />
-                        Create Full Backup
-                      </button>
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                        <Upload className="h-5 w-5 mr-2" />
-                        Restore from Backup
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Database Operations</h3>
-                    <div className="space-y-3">
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                        <Database className="h-5 w-5 mr-2" />
-                        Run Migrations
-                      </button>
-                      <button className="w-full flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
-                        <RefreshCw className="h-5 w-5 mr-2" />
-                        Optimize Database
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <div className="flex items-center">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
-                    <p className="text-sm text-yellow-800">
-                      <strong>Warning:</strong> Database operations can affect system performance. 
-                      Schedule during maintenance windows when possible.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            <DataManagement />
           )}
 
           {activeTab === 'analytics' && (
-            <motion.div
-              key="analytics"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Advanced Analytics</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-blue-100">Total Users</p>
-                        <p className="text-3xl font-bold">{stats.totalUsers}</p>
-                      </div>
-                      <Users className="h-8 w-8 text-blue-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-green-100">Warehouses</p>
-                        <p className="text-3xl font-bold">{stats.totalWarehouses}</p>
-                      </div>
-                      <Warehouse className="h-8 w-8 text-green-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-purple-100">Products</p>
-                        <p className="text-3xl font-bold">{stats.totalProducts}</p>
-                      </div>
-                      <Package className="h-8 w-8 text-purple-200" />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-orange-100">Orders</p>
-                        <p className="text-3xl font-bold">{stats.totalOrders}</p>
-                      </div>
-                      <ShoppingCart className="h-8 w-8 text-orange-200" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center py-12 text-gray-500">
-                  <BarChart3 className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p>Advanced analytics dashboard would be implemented here</p>
-                  <p className="text-sm">Charts, graphs, and detailed system metrics</p>
-                </div>
-              </div>
-            </motion.div>
+            <Analytics stats={stats} />
           )}
         </AnimatePresence>
       </div>

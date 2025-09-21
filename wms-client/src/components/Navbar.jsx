@@ -92,7 +92,7 @@ const Navbar = () => {
                   <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                     <User className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{user?.firstName || user?.username}</span>
+                  <span className="font-medium">{user?.role}</span>
                   <svg className={`w-4 h-4 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -266,6 +266,7 @@ const Navbar = () => {
                     >
                       <Link
                         to="/admin"
+                        onClick={() => handleSmoothScroll()}
                         className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
                       >
                         <Crown className="w-4 h-4 mr-3" />
@@ -284,6 +285,7 @@ const Navbar = () => {
                         <Link
                           to="/manage"
                           className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
+                          onClick={() => handleSmoothScroll()}
                         >
                           <Settings className="w-4 h-4 mr-3" />
                           Management Dashboard
@@ -297,6 +299,7 @@ const Navbar = () => {
                         <Link
                           to="/register"
                           className="flex items-center py-3 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-300"
+                          onClick={() => handleSmoothScroll()}
                         >
                           <UserPlus className="w-4 h-4 mr-3" />
                           Register New User

@@ -70,6 +70,21 @@ const searchOrders = async (number) => {
   return response.data;
 }
 
+const getAllActions = async () => {
+  const response = await axios.get(`/api/actions`);
+  return response.data;
+}
+
+const getUserActions = async (userId) => {
+  const response = await axios.get(`/api/actions/user/${userId}`);
+  return response.data;
+}
+
+const getMyActions = async () => {
+  const response = await axios.get(`/api/actions/my-actions`);
+  return response.data;
+}
+
 export {
   getWarehouses,
   getWarehouse,
@@ -85,4 +100,7 @@ export {
   getOrders,
   getOrder,
   searchOrders,
+  getAllActions,
+  getUserActions,
+  getMyActions,
 }

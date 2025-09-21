@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import handleSmoothScroll from '../utils/handleSmoothScroll';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -106,7 +107,7 @@ const Register = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen gradient-bg to-emerald-100 flex items-center py-16 justify-center px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -346,6 +347,7 @@ const Register = () => {
 
             <Link
               to="/"
+              onClick={() => handleSmoothScroll()}
               className="flex-1 flex justify-center items-center py-3 px-4 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors"
             >
               Cancel

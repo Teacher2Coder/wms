@@ -11,7 +11,7 @@ const WarehouseOverview = ({ warehouse, variants }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCreateSectionModalOpen, setIsCreateSectionModalOpen] = useState(false);
-  const { canManage, isAdmin } = useAuth(); // Role-based permissions
+  const { canManage } = useAuth();
   
   const handleSwitchDelete = () => {
     setIsSettingsModalOpen(false);
@@ -51,7 +51,7 @@ const WarehouseOverview = ({ warehouse, variants }) => {
               </p>
             </div>
           </div>
-          {isAdmin && (
+          {canManage && (
             <button
               onClick={() => setIsSettingsModalOpen(true)}
               className="p-3 rounded-xl bg-accent-100 hover:bg-accent-200 text-accent-600 hover:text-accent-700 transition-all duration-200 hover:scale-105"
