@@ -19,4 +19,6 @@ public interface IActionLogService
     
     Task<IEnumerable<Entities.Action>> GetActionsAsync(DateTime? fromDate = null, DateTime? toDate = null, 
         string? actionType = null, string? entityType = null, int pageNumber = 1, int pageSize = 50);
+
+    Task<Entities.Action> GetActionAsync(int actionId);
 }

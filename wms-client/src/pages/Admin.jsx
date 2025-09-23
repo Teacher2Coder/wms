@@ -22,6 +22,7 @@ import Security from '../components/admin/Security.jsx';
 import DataManagement from '../components/admin/DataManagement.jsx';
 import Analytics from '../components/admin/Analytics.jsx';
 import handleSmoothScroll from '../utils/handleSmoothScroll';
+import { getAllActions } from '../utils/http/gets';
 
 const Admin = () => {
   const { user, isAdmin } = useAuth();
@@ -45,13 +46,15 @@ const Admin = () => {
     totalOrders: 0,
     systemUptime: '99.9%'
   });
+  const [actions, setActions] = useState([]);
 
-  const actions = [
-    { action: 'User registered', user: 'john.doe', time: '2 hours ago', type: 'user' },
-    { action: 'Product added', user: 'jane.smith', time: '4 hours ago', type: 'product' },
-    { action: 'Warehouse updated', user: 'mike.johnson', time: '6 hours ago', type: 'warehouse' },
-    { action: 'Order processed', user: 'sarah.wilson', time: '8 hours ago', type: 'order' }
-  ];
+  useEffect(() => {
+    const fetchActions = async () => {
+      const fetchedActions = await getAllActions();
+      setActions(fetchedActions);
+    }
+    fetchActions();
+  }, []);
 
   // Redirect if user doesn't have admin permissions
   if (!isAdmin) {

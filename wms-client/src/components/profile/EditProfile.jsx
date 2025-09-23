@@ -6,9 +6,10 @@ import { useAuth } from '../../contexts/AuthContext';
 const EditProfile = ({
   showEditModal,
   closeModals,
-  onSuccess
+  onSuccess,
+  user
 }) => {
-  const { user, updateProfile } = useAuth();
+  const { updateProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [editForm, setEditForm] = useState({

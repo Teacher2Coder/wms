@@ -1,29 +1,47 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Edit3, Key, Calendar, Shield } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { getMyActions } from '../utils/http/gets';
+import { User, Edit3, Key, Calendar, Shield } from 'lucide-react';
+import { getUserActions, getUser } from '../utils/http/gets';
 import Actions from '../components/admin/Actions';
+import Loading from '../components/Loading';
+import NotFound from '../components/NotFound';
 import EditProfile from '../components/profile/EditProfile';
 import EditPassword from '../components/profile/EditPassword';
-import SuccessMessage from '../components/SuccessMessage';
 
-const Profile = () => {
-  const { user } = useAuth();
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+const UserProfile = () => {
+  const { id } = useParams();
+  const { user: currentUser } = useAuth();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [actions, setActions] = useState([]);
   const [actionsLoading, setActionsLoading] = useState(true);
   const [actionsError, setActionsError] = useState(null);
-
-  const [successMessage, setSuccessMessage] = useState('');
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showEditPasswordModal, setShowEditPasswordModal] = useState(false);
 
   useEffect(() => {
+    
+    const fetchUser = async () => {
+      try {
+        const user = await getUser(id);
+        console.log('User fetched:', user);
+        setUser(user);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+    
     const fetchActions = async () => {
       try {
         setActionsLoading(true);
         setActionsError(null);
-        const userActions = await getMyActions();
+        const userActions = await getUserActions(id);
         setActions(userActions);
         console.log('User actions fetched:', userActions);
       } catch (error) {
@@ -38,31 +56,30 @@ const Profile = () => {
     fetchActions();
   }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
 
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <NotFound />
+      </div>
+    );
+  }
 
-  const closeModals = () => {
-    setShowEditModal(false);
-    setShowPasswordModal(false);
-  };
+  if (currentUser.id === user.id) {
+    window.location.href = '/profile';
+  }
 
   const handleSuccess = (message) => {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Success Message */}
-        <SuccessMessage successMessage={successMessage} />
 
         {/* Header */}
         <motion.div
@@ -94,8 +111,8 @@ const Profile = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setShowEditModal(true)}
                 className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                onClick={() => setShowEditProfileModal(true)}
               >
                 <Edit3 className="h-4 w-4 mr-2" />
                 Edit Profile
@@ -103,8 +120,8 @@ const Profile = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setShowPasswordModal(true)}
                 className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                onClick={() => setShowEditPasswordModal(true)}
               >
                 <Key className="h-4 w-4 mr-2" />
                 Change Password
@@ -203,17 +220,17 @@ const Profile = () => {
           error={actionsError}
         />
 
-        <EditProfile 
+        <EditProfile
           user={user}
-          showEditModal={showEditModal} 
-          closeModals={closeModals} 
+          showEditModal={showEditProfileModal}
+          closeModals={() => setShowEditProfileModal(false)}
           onSuccess={handleSuccess}
         />
 
         <EditPassword
           user={user}
-          showPasswordModal={showPasswordModal}
-          closeModals={closeModals}
+          showPasswordModal={showEditPasswordModal}
+          closeModals={() => setShowEditPasswordModal(false)}
           onSuccess={handleSuccess}
         />
       </div>
@@ -221,4 +238,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

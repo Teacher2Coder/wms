@@ -9,7 +9,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/actions")]
-// [Authorize] // Require authentication for all action log operations
+[Authorize] // Require authentication for all action log operations
 public class ActionController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -22,7 +22,7 @@ public class ActionController : ControllerBase
     }
 
     [HttpGet]
-    // [Authorize(Roles = "Admin,Manager")] // Only admins can view all actions
+    [Authorize(Roles = "Admin,Manager")] // Only admins can view all actions
     public async Task<IActionResult> GetActions(
         [FromQuery] DateTime? fromDate = null,
         [FromQuery] DateTime? toDate = null,
@@ -39,8 +39,16 @@ public class ActionController : ControllerBase
         return Ok(actionDtos);
     }
 
+    [HttpGet("{actionId}")]
+    public async Task<IActionResult> GetAction(int actionId)
+    {
+        var action = await _actionLogService.GetActionAsync(actionId);
+        var actionDto = _mapper.Map<ActionDto>(action);
+        return Ok(actionDto);
+    }
+
     [HttpGet("user/{userId}")]
-    // [Authorize(Roles = "Admin,Manager")] // Admins and managers can view user actions
+    [Authorize(Roles = "Admin,Manager")] // Admins and managers can view user actions
     public async Task<IActionResult> GetUserActions(int userId, 
         [FromQuery] int pageNumber = 1, 
         [FromQuery] int pageSize = 50)
@@ -73,7 +81,7 @@ public class ActionController : ControllerBase
     }
 
     [HttpGet("entity/{entityType}")]
-    // [Authorize(Roles = "Admin,Manager")] // Admins and managers can view entity actions
+    [Authorize(Roles = "Admin,Manager")] // Admins and managers can view entity actions
     public async Task<IActionResult> GetEntityActions(string entityType,
         [FromQuery] int? entityId = null,
         [FromQuery] int pageNumber = 1, 

@@ -15,12 +15,28 @@ import Section from './pages/Section.jsx';
 import Error from './pages/Error.jsx';
 import Products from './pages/Products.jsx';
 import Item from './pages/Item.jsx';
+import Action from './pages/Action.jsx';
+import UserProfile from './pages/UserProfile.jsx';
 import './styles/app.css';
 import './utils/axios-config.js'; // Import axios configuration
 
 const AppContent = () => {
   const location = useLocation();
 
+  const protectedRoutes = [
+    { path: '/', element: <Home /> },
+    { path: '/register', element: <Register /> },
+    { path: '/profile', element: <Profile /> },
+    { path: '/manage', element: <Manage /> },
+    { path: '/admin', element: <Admin /> },
+    { path: '/warehouse/:id', element: <Warehouse /> },
+    { path: '/warehouse/:warehouseId/section/:sectionId', element: <Section /> },
+    { path: '/products', element: <Products /> },
+    { path: '/item/:itemId', element: <Item /> },
+    { path: '/action/:id', element: <Action /> },
+    { path: '/user/:id', element: <UserProfile /> },
+  ]
+  
   return (
     <div className='app'>
       <Navbar />
@@ -28,51 +44,13 @@ const AppContent = () => {
         <AnimatePresence mode='wait'>
           <Routes location={location} key={location.pathname}>
             <Route path='/login' element={<Login />} />
-            <Route path='/register' element={
-              <ProtectedRoute requiredRoles={['Admin', 'Manager']}>
-                <Register />
-              </ProtectedRoute>
-            } />
-            <Route path='/profile' element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path='/manage' element={
-              <ProtectedRoute requiredRoles={['Admin', 'Manager']}>
-                <Manage />
-              </ProtectedRoute>
-            } />
-            <Route path='/admin' element={
-              <ProtectedRoute requiredRoles={['Admin']}>
-                <Admin />
-              </ProtectedRoute>
-            } />
-            <Route path='/' element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            } />
-            <Route path='/warehouse/:id' element={
-              <ProtectedRoute>
-                <Warehouse />
-              </ProtectedRoute>
-            } />
-            <Route path='/warehouse/:warehouseId/section/:sectionId' element={
-              <ProtectedRoute>
-                <Section />
-              </ProtectedRoute>
-            } />
-            <Route path='/products' element={
-              <ProtectedRoute>
-                <Products />
-              </ProtectedRoute>
-            } />
-            <Route path='/item/:itemId' element={
-              <ProtectedRoute>
-                <Item />
-              </ProtectedRoute>
-            } />
+            {protectedRoutes.map((route) => (
+              <Route key={route.path} path={route.path} element={
+                <ProtectedRoute>
+                  {route.element}
+                </ProtectedRoute>
+              } />
+            ))}
             <Route path='*' element={<Error />} />
           </Routes>
         </AnimatePresence>

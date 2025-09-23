@@ -108,4 +108,9 @@ public class ActionLogService : IActionLogService
             .Take(pageSize)
             .ToListAsync();
     }
+
+    public async Task<Entities.Action> GetActionAsync(int actionId)
+    {
+        return await _context.Actions.FindAsync(actionId) ?? throw new Exception("Action not found");
+    }
 }

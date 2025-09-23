@@ -135,7 +135,11 @@ const UserManagement = ({
                 {users.map((userData) => (
                   <tr key={userData.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
+                      <Link 
+                        to={`/user/${userData.id}`} 
+                        onClick={() => handleSmoothScroll()} 
+                        className="flex items-center hover:text-blue-600"
+                      >
                         <div
                           className={`h-10 w-10 rounded-full flex items-center justify-center ${
                             userData.role === "Admin"
@@ -166,7 +170,7 @@ const UserManagement = ({
                             @{userData.username}
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -205,12 +209,14 @@ const UserManagement = ({
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
-                        <button
+                        <Link
+                          to={`/user/${userData.id}`}
+                          onClick={() => handleSmoothScroll()}
                           className="text-indigo-600 hover:text-indigo-900"
                           title="View Details"
                         >
                           <Eye className="h-4 w-4" />
-                        </button>
+                        </Link>
                         <button
                           className="text-green-600 hover:text-green-900"
                           title="Edit User"

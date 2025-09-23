@@ -142,6 +142,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async (userData) => {
+    try {
+      await auth.updateUser(userData.id, userData.username, userData.firstName, userData.lastName, userData.role);
+      return { success: true };
+    } catch (error) {
+      console.error('User update failed:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'User update failed.' 
+      };
+    }
+  };
+
   // Handle both numeric and string role values
   const getRoleString = (role) => {
     if (typeof role === 'number') {
@@ -166,6 +179,7 @@ export const AuthProvider = ({ children }) => {
     changePassword,
     updateUserInfo,
     updateProfile,
+    updateUser,
     isAuthenticated: !!user,
     isAdmin,
     isManager,
