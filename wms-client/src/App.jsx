@@ -17,6 +17,7 @@ import Products from './pages/Products.jsx';
 import Item from './pages/Item.jsx';
 import Action from './pages/Action.jsx';
 import UserProfile from './pages/UserProfile.jsx';
+import CheckIn from './pages/CheckIn.jsx';
 import './styles/app.css';
 import './utils/axios-config.js'; // Import axios configuration
 
@@ -35,6 +36,7 @@ const AppContent = () => {
     { path: '/item/:itemId', element: <Item /> },
     { path: '/action/:id', element: <Action /> },
     { path: '/user/:id', element: <UserProfile /> },
+    { path: '/check-in', element: <CheckIn /> },
   ]
   
   return (

@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { 
-  Users, 
-  Settings, 
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  Users,
+  Settings,
   Shield,
   Eye,
   Database,
@@ -12,27 +12,27 @@ import {
   Crown,
   Download,
   Server,
-} from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import auth from '../utils/auth/auth.js';
-import Overview from '../components/admin/Overview.jsx';
-import UserManagement from '../components/admin/UserManagement.jsx';
-import SystemHealth from '../components/admin/SystemHealth.jsx';
-import Security from '../components/admin/Security.jsx';
-import DataManagement from '../components/admin/DataManagement.jsx';
-import Analytics from '../components/admin/Analytics.jsx';
-import handleSmoothScroll from '../utils/handleSmoothScroll';
-import { getAllActions } from '../utils/http/gets';
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import auth from "../utils/auth/auth.js";
+import Overview from "../components/admin/Overview.jsx";
+import UserManagement from "../components/admin/UserManagement.jsx";
+import SystemHealth from "../components/admin/SystemHealth.jsx";
+import Security from "../components/admin/Security.jsx";
+import DataManagement from "../components/admin/DataManagement.jsx";
+import Analytics from "../components/admin/Analytics.jsx";
+import handleSmoothScroll from "../utils/handleSmoothScroll";
+import { getAllActions } from "../utils/http/gets";
 
 const Admin = () => {
   const { user, isAdmin } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [systemStatus, setSystemStatus] = useState({
-    apiStatus: 'online',
-    dbStatus: 'online',
-    lastBackup: new Date().toISOString()
+    apiStatus: "online",
+    dbStatus: "online",
+    lastBackup: new Date().toISOString(),
   });
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -44,7 +44,7 @@ const Admin = () => {
     totalWarehouses: 0,
     totalProducts: 0,
     totalOrders: 0,
-    systemUptime: '99.9%'
+    systemUptime: "99.9%",
   });
   const [actions, setActions] = useState([]);
 
@@ -52,7 +52,7 @@ const Admin = () => {
     const fetchActions = async () => {
       const fetchedActions = await getAllActions();
       setActions(fetchedActions);
-    }
+    };
     fetchActions();
   }, []);
 
@@ -64,7 +64,9 @@ const Admin = () => {
           <div className="mx-auto h-16 w-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
             <Crown className="h-8 w-8 text-red-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Access Required</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Admin Access Required
+          </h2>
           <p className="text-gray-600 mb-4">
             You need Administrator privileges to access this page.
           </p>
@@ -90,26 +92,28 @@ const Admin = () => {
     try {
       const userData = await auth.getAllUsers();
       setUsers(userData);
-      
+
       // Calculate user statistics
       const totalUsers = userData.length;
-      const activeUsers = userData.filter(u => u.isActive).length;
+      const activeUsers = userData.filter((u) => u.isActive).length;
       const inactiveUsers = totalUsers - activeUsers;
-      const adminUsers = userData.filter(u => u.role === 'Admin').length;
-      const managerUsers = userData.filter(u => u.role === 'Manager').length;
-      const employeeUsers = userData.filter(u => u.role === 'Employee').length;
-      
-      setStats(prev => ({
+      const adminUsers = userData.filter((u) => u.role === "Admin").length;
+      const managerUsers = userData.filter((u) => u.role === "Manager").length;
+      const employeeUsers = userData.filter(
+        (u) => u.role === "Employee"
+      ).length;
+
+      setStats((prev) => ({
         ...prev,
         totalUsers,
         activeUsers,
         inactiveUsers,
         adminUsers,
         managerUsers,
-        employeeUsers
+        employeeUsers,
       }));
     } catch (error) {
-      console.error('Failed to fetch users:', error);
+      console.error("Failed to fetch users:", error);
     } finally {
       setLoading(false);
     }
@@ -117,22 +121,26 @@ const Admin = () => {
 
   const fetchSystemStats = () => {
     // In a real app, you'd fetch these from your API
-    setStats(prev => ({
+    setStats((prev) => ({
       ...prev,
       totalWarehouses: 4,
       totalProducts: 25,
       totalOrders: 156,
-      systemUptime: '99.9%'
+      systemUptime: "99.9%",
     }));
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this user? This action cannot be undone."
+      )
+    ) {
       try {
         await auth.deleteUser(userId);
         await fetchUsers(); // Refresh the list
       } catch (error) {
-        console.error('Failed to delete user:', error);
+        console.error("Failed to delete user:", error);
       }
     }
   };
@@ -141,74 +149,74 @@ const Admin = () => {
     try {
       await fetchUsers(); // Refresh the list
     } catch (error) {
-      console.error('Failed to toggle user status:', error);
+      console.error("Failed to toggle user status:", error);
     }
   };
 
   const overviewCards = [
     {
-      title: 'Total Users',
-      description: 'All registered users in the system',
+      title: "Total Users",
+      description: "All registered users in the system",
       icon: Users,
-      color: 'bg-blue-500',
+      color: "bg-blue-500",
       count: stats.totalUsers,
-      action: () => setActiveTab('users')
+      action: () => setActiveTab("users"),
     },
     {
-      title: 'System Health',
-      description: 'Monitor system performance and status',
+      title: "System Health",
+      description: "Monitor system performance and status",
       icon: Activity,
-      color: 'bg-green-500',
+      color: "bg-green-500",
       count: stats.systemUptime,
-      action: () => setActiveTab('system')
+      action: () => setActiveTab("system"),
     },
     {
-      title: 'Security Center',
-      description: 'Manage security settings and permissions',
+      title: "Security Center",
+      description: "Manage security settings and permissions",
       icon: Shield,
-      color: 'bg-red-500',
+      color: "bg-red-500",
       count: stats.adminUsers,
-      action: () => setActiveTab('security')
+      action: () => setActiveTab("security"),
     },
     {
-      title: 'Data Management',
-      description: 'Backup, restore, and manage data',
+      title: "Data Management",
+      description: "Backup, restore, and manage data",
       icon: Database,
-      color: 'bg-purple-500',
-      count: '24h',
-      action: () => setActiveTab('data')
-    }
+      color: "bg-purple-500",
+      count: "24h",
+      action: () => setActiveTab("data"),
+    },
   ];
 
   const quickActions = [
     {
-      title: 'Create Admin User',
-      description: 'Add a new administrator',
+      title: "Create Admin User",
+      description: "Add a new administrator",
       icon: Crown,
-      color: 'bg-red-500',
-      link: '/register'
+      color: "bg-red-500",
+      link: "/register",
     },
     {
-      title: 'System Backup',
-      description: 'Create system backup',
+      title: "System Backup",
+      description: "Create system backup",
       icon: Download,
-      color: 'bg-blue-500',
-      action: () => console.log('System backup initiated')
+      color: "bg-blue-500",
+      action: () => console.log("System backup initiated"),
     },
     {
-      title: 'View Audit Logs',
-      description: 'Review system audit trail',
+      title: "View Audit Logs",
+      description: "Review system audit trail",
       icon: Eye,
-      color: 'bg-yellow-500',
-      action: () => console.log('View audit logs')
+      color: "bg-yellow-500",
+      action: () => setActiveTab("security"),
     },
     {
-      title: 'System Settings',
-      description: 'Configure system parameters',
+      title: "System Settings",
+      description: "Configure system parameters",
       icon: Settings,
-      color: 'bg-gray-500',
-      action: () => setActiveTab('system')
-    }
+      color: "bg-gray-500",
+      action: () => setActiveTab("system"),
+    },
   ];
 
   return (
@@ -235,12 +243,20 @@ const Admin = () => {
                 <Crown className="h-4 w-4 mr-1" />
                 Administrator
               </span>
-              <div className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                systemStatus.apiStatus === 'online' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                <div className={`w-2 h-2 rounded-full mr-2 ${
-                  systemStatus.apiStatus === 'online' ? 'bg-green-500' : 'bg-red-500'
-                }`}></div>
+              <div
+                className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                  systemStatus.apiStatus === "online"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                }`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full mr-2 ${
+                    systemStatus.apiStatus === "online"
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                  }`}
+                ></div>
                 System {systemStatus.apiStatus}
               </div>
             </div>
@@ -256,20 +272,20 @@ const Admin = () => {
         >
           <nav className="flex space-x-8 bg-white rounded-lg p-1 shadow-sm border border-gray-200 overflow-x-auto">
             {[
-              { id: 'overview', label: 'Overview', icon: Activity },
-              { id: 'users', label: 'User Management', icon: Users },
-              { id: 'system', label: 'System Health', icon: Server },
-              { id: 'security', label: 'Security', icon: Shield },
-              { id: 'data', label: 'Data Management', icon: Database },
-              { id: 'analytics', label: 'Analytics', icon: TrendingUp }
+              { id: "overview", label: "Overview", icon: Activity },
+              { id: "users", label: "User Management", icon: Users },
+              { id: "system", label: "System Health", icon: Server },
+              { id: "security", label: "Security", icon: Shield },
+              { id: "data", label: "Data Management", icon: Database },
+              { id: "analytics", label: "Analytics", icon: TrendingUp },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
                   activeTab === tab.id
-                    ? 'bg-red-100 text-red-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? "bg-red-100 text-red-700"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 }`}
               >
                 <tab.icon className="h-4 w-4 mr-2" />
@@ -281,8 +297,8 @@ const Admin = () => {
 
         {/* Tab Content */}
         <AnimatePresence mode="wait">
-          {activeTab === 'overview' && (
-            <Overview 
+          {activeTab === "overview" && (
+            <Overview
               overviewCards={overviewCards}
               quickActions={quickActions}
               stats={stats}
@@ -290,33 +306,25 @@ const Admin = () => {
             />
           )}
 
-          {activeTab === 'users' && (
-            <UserManagement 
+          {activeTab === "users" && (
+            <UserManagement
               users={users}
               loading={loading}
               stats={stats}
               user={user}
               fetchUsers={fetchUsers}
               handleToggleUserStatus={handleToggleUserStatus}
-              handleDeleteUser={handleDeleteUser} 
+              handleDeleteUser={handleDeleteUser}
             />
           )}
 
-          {activeTab === 'system' && (
-            <SystemHealth stats={stats} />
-          )}
+          {activeTab === "system" && <SystemHealth stats={stats} />}
 
-          {activeTab === 'security' && (
-            <Security stats={stats} />
-          )}
+          {activeTab === "security" && <Security stats={stats} />}
 
-          {activeTab === 'data' && (
-            <DataManagement />
-          )}
+          {activeTab === "data" && <DataManagement />}
 
-          {activeTab === 'analytics' && (
-            <Analytics stats={stats} />
-          )}
+          {activeTab === "analytics" && <Analytics stats={stats} />}
         </AnimatePresence>
       </div>
     </div>

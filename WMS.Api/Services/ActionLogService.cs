@@ -13,16 +13,16 @@ public class ActionLogService : IActionLogService
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task LogActionAsync(int userId, string actionType, string entityType, int? entityId = null, 
-        string? entityName = null, string? description = null, object? oldValues = null, 
+    public async Task LogActionAsync(int userId, string actionType, string entityType, int? entityId = null,
+        string? entityName = null, string? description = null, object? oldValues = null,
         object? newValues = null, string? ipAddress = null, string? userAgent = null)
     {
-        await LogActionAsync(userId, actionType, entityType, entityId, entityName, description, 
+        await LogActionAsync(userId, actionType, entityType, entityId, entityName, description,
             oldValues, newValues, ipAddress, userAgent, true, null);
     }
 
-    public async Task LogActionAsync(int userId, string actionType, string entityType, int? entityId, 
-        string? entityName, string? description, object? oldValues, object? newValues, 
+    public async Task LogActionAsync(int userId, string actionType, string entityType, int? entityId,
+        string? entityName, string? description, object? oldValues, object? newValues,
         string? ipAddress, string? userAgent, bool isSuccessful, string? errorMessage = null)
     {
         try
@@ -66,7 +66,7 @@ public class ActionLogService : IActionLogService
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Entities.Action>> GetEntityActionsAsync(string entityType, int? entityId = null, 
+    public async Task<IEnumerable<Entities.Action>> GetEntityActionsAsync(string entityType, int? entityId = null,
         int pageNumber = 1, int pageSize = 50)
     {
         var query = _context.Actions
@@ -85,7 +85,7 @@ public class ActionLogService : IActionLogService
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Entities.Action>> GetActionsAsync(DateTime? fromDate = null, DateTime? toDate = null, 
+    public async Task<IEnumerable<Entities.Action>> GetActionsAsync(DateTime? fromDate = null, DateTime? toDate = null,
         string? actionType = null, string? entityType = null, int pageNumber = 1, int pageSize = 50)
     {
         var query = _context.Actions.Include(a => a.User).AsQueryable();
@@ -112,5 +112,12 @@ public class ActionLogService : IActionLogService
     public async Task<Entities.Action> GetActionAsync(int actionId)
     {
         return await _context.Actions.FindAsync(actionId) ?? throw new Exception("Action not found");
+    }
+
+    public async Task DeleteOldActionsAsync()
+    {
+        var oldActions = await _context.Actions.Where(a => a.Timestamp < DateTime.UtcNow.AddDays(-90)).ToListAsync();
+        _context.Actions.RemoveRange(oldActions);
+        await _context.SaveChangesAsync();
     }
 }

@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAuth } from '../contexts/AuthContext';
-import { User, Edit3, Key, Calendar, Shield } from 'lucide-react';
-import { getUserActions, getUser } from '../utils/http/gets';
-import Actions from '../components/admin/Actions';
-import Loading from '../components/Loading';
-import NotFound from '../components/NotFound';
-import EditProfile from '../components/profile/EditProfile';
-import EditPassword from '../components/profile/EditPassword';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "../contexts/AuthContext";
+import { User, Edit3, Key, Calendar, Shield } from "lucide-react";
+import { getUserActions, getUser } from "../utils/http/gets";
+import Actions from "../components/admin/Actions";
+import Loading from "../components/Loading";
+import NotFound from "../components/NotFound";
+import EditProfile from "../components/profile/EditProfile";
+import EditPassword from "../components/profile/EditPassword";
+import SuccessMessage from "../components/SuccessMessage";
 
 const UserProfile = () => {
   const { id } = useParams();
   const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actions, setActions] = useState([]);
@@ -20,41 +22,48 @@ const UserProfile = () => {
   const [actionsError, setActionsError] = useState(null);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [showEditPasswordModal, setShowEditPasswordModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    
+    if (currentUser && currentUser.id.toString() === id) {
+      navigate("/profile", { replace: true });
+      return;
+    }
+
     const fetchUser = async () => {
       try {
         const user = await getUser(id);
-        console.log('User fetched:', user);
+        console.log("User fetched:", user);
         setUser(user);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error("Error fetching user:", error);
         setLoading(false);
       }
     };
 
-    fetchUser();
-    
     const fetchActions = async () => {
       try {
         setActionsLoading(true);
         setActionsError(null);
         const userActions = await getUserActions(id);
         setActions(userActions);
-        console.log('User actions fetched:', userActions);
+        console.log("User actions fetched:", userActions);
       } catch (error) {
-        console.error('Failed to fetch user actions:', error);
-        setActionsError('Failed to load your activity history');
+        console.error("Failed to fetch user actions:", error);
+        setActionsError("Failed to load your activity history");
         setActions([]); // Set empty array on error
       } finally {
         setActionsLoading(false);
       }
     };
 
-    fetchActions();
-  }, []);
+    // Only fetch data if we're not redirecting
+    if (currentUser && currentUser.id.toString() !== id) {
+      fetchUser();
+      fetchActions();
+    }
+  }, [id, currentUser, navigate]);
 
   if (loading) {
     return <Loading />;
@@ -68,18 +77,16 @@ const UserProfile = () => {
     );
   }
 
-  if (currentUser.id === user.id) {
-    window.location.href = '/profile';
-  }
-
   const handleSuccess = (message) => {
     setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(''), 3000);
+    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Success Message */}
+        <SuccessMessage successMessage={successMessage} />
 
         {/* Header */}
         <motion.div
@@ -97,11 +104,15 @@ const UserProfile = () => {
                   {user.firstName} {user.lastName}
                 </h1>
                 <p className="text-gray-600">@{user.username}</p>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
-                  user.role === 'Admin' ? 'bg-red-100 text-red-800' :
-                  user.role === 'Manager' ? 'bg-blue-100 text-blue-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
+                    user.role === "Admin"
+                      ? "bg-red-100 text-red-800"
+                      : user.role === "Manager"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
                   <Shield className="h-3 w-3 mr-1" />
                   {user.role}
                 </span>
@@ -137,59 +148,77 @@ const UserProfile = () => {
           transition={{ delay: 0.1 }}
           className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
         >
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Profile Information</h2>
-          
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">
+            Profile Information
+          </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  First Name
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border">
-                  {user.firstName || 'Not specified'}
+                  {user.firstName || "Not specified"}
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Username
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border">
                   {user.username}
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Account Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Account Status
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
-                    {user.isActive ? 'Active' : 'Inactive'}
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      user.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {user.isActive ? "Active" : "Inactive"}
                   </span>
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Name
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border">
-                  {user.lastName || 'Not specified'}
+                  {user.lastName || "Not specified"}
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Role
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border">
                   {user.role}
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Member Since</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Member Since
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border flex items-center">
                   <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-                  {new Date(user.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                  {new Date(user.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })}
                 </div>
               </div>
@@ -199,14 +228,16 @@ const UserProfile = () => {
           {user.lastLoginAt && (
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Last Login</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Login
+                </label>
                 <div className="p-3 bg-gray-50 rounded-lg border">
-                  {new Date(user.lastLoginAt).toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                  {new Date(user.lastLoginAt).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })}
                 </div>
               </div>
@@ -214,8 +245,8 @@ const UserProfile = () => {
           )}
         </motion.div>
 
-        <Actions 
-          actions={actions} 
+        <Actions
+          actions={actions}
           loading={actionsLoading}
           error={actionsError}
         />

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WMS.Api.Services;
 using WMS.Api.Models;
 using System.Security.Claims;
+using WMS.Api.Extensions;
 
 namespace WMS.Api.Controllers;
 
@@ -35,7 +36,7 @@ public class ActionController : ControllerBase
 
         var actions = await _actionLogService.GetActionsAsync(fromDate, toDate, actionType, entityType, pageNumber, pageSize);
         var actionDtos = _mapper.Map<IEnumerable<ActionDto>>(actions);
-        
+
         return Ok(actionDtos);
     }
 
@@ -49,21 +50,21 @@ public class ActionController : ControllerBase
 
     [HttpGet("user/{userId}")]
     [Authorize(Roles = "Admin,Manager")] // Admins and managers can view user actions
-    public async Task<IActionResult> GetUserActions(int userId, 
-        [FromQuery] int pageNumber = 1, 
+    public async Task<IActionResult> GetUserActions(int userId,
+        [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 50)
     {
         if (pageSize > 100) pageSize = 100; // Limit page size
 
         var actions = await _actionLogService.GetUserActionsAsync(userId, pageNumber, pageSize);
         var actionDtos = _mapper.Map<IEnumerable<ActionDto>>(actions);
-        
+
         return Ok(actionDtos);
     }
 
     [HttpGet("my-actions")]
     public async Task<IActionResult> GetMyActions(
-        [FromQuery] int pageNumber = 1, 
+        [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 50)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -76,7 +77,7 @@ public class ActionController : ControllerBase
 
         var actions = await _actionLogService.GetUserActionsAsync(userId, pageNumber, pageSize);
         var actionDtos = _mapper.Map<IEnumerable<ActionDto>>(actions);
-        
+
         return Ok(actionDtos);
     }
 
@@ -84,14 +85,25 @@ public class ActionController : ControllerBase
     [Authorize(Roles = "Admin,Manager")] // Admins and managers can view entity actions
     public async Task<IActionResult> GetEntityActions(string entityType,
         [FromQuery] int? entityId = null,
-        [FromQuery] int pageNumber = 1, 
+        [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 50)
     {
         if (pageSize > 100) pageSize = 100; // Limit page size
 
         var actions = await _actionLogService.GetEntityActionsAsync(entityType, entityId, pageNumber, pageSize);
         var actionDtos = _mapper.Map<IEnumerable<ActionDto>>(actions);
-        
+
         return Ok(actionDtos);
+    }
+
+    [HttpDelete]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteActions()
+    {
+        await _actionLogService.DeleteOldActionsAsync();
+        await this.LogActionAsync(_actionLogService, "DELETE", "Action", null, null,
+          $"Deleted old actions", null, null, true, "Old actions deleted successfully");
+
+        return Ok();
     }
 }

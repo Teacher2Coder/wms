@@ -10,6 +10,11 @@ const getWarehouse = async (warehouseId) => {
   return response.data;
 }
 
+const searchWarehouses = async (name) => {
+  const response = await axios.get(`/api/warehouse/search?name=${name}`);
+  return response.data;
+}
+
 const getSections = async (warehouseId) => {
   const response = await axios.get(`/api/warehouse/${warehouseId}/section`);
   return response.data;
@@ -98,6 +103,7 @@ const getUser = async (userId) => {
 export {
   getWarehouses,
   getWarehouse,
+  searchWarehouses,
   getSections,
   getSection,
   getAllProducts,

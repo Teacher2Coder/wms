@@ -24,6 +24,14 @@ public class WarehouseRepository : IWarehouseRepository
       .ToListAsync();
   }
 
+  public async Task<IEnumerable<Warehouse>> GetWarehousesByNameAsync(string name)
+  {
+    return await _context.Warehouses
+      .Include(w => w.Sections)
+      .Where(w => EF.Functions.Like(w.Name, $"%{name}%"))
+      .ToListAsync();
+  }
+
   public async Task<Warehouse?> GetWarehouseByIdAsync(int id)
   {
     return await _context.Warehouses
@@ -57,7 +65,15 @@ public class WarehouseRepository : IWarehouseRepository
   {
     return await _context.Products
       .Include(p => p.Items)
-      .Where(p => p.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+      .Where(p => EF.Functions.Like(p.Name, $"%{name}%"))
+      .ToListAsync();
+  }
+
+  public async Task<IEnumerable<Product>> GetProductsBySkuAsync(string sku)
+  {
+    return await _context.Products
+      .Include(p => p.Items)
+      .Where(p => EF.Functions.Like(p.Sku, $"%{sku}%"))
       .ToListAsync();
   }
 
@@ -70,7 +86,7 @@ public class WarehouseRepository : IWarehouseRepository
   public async Task<IEnumerable<Item>> GetItemsBySerialNumberAsync(string serialNumber)
   {
     return await _context.Items
-      .Where(i => i.SerialNumber.Contains(serialNumber, StringComparison.CurrentCultureIgnoreCase))
+      .Where(i => EF.Functions.Like(i.SerialNumber, $"%{serialNumber}%"))
       .ToListAsync();
   }
 
@@ -80,7 +96,7 @@ public class WarehouseRepository : IWarehouseRepository
       .Include(o => o.Items)
       .ToListAsync();
   }
-  
+
   public async Task<Order?> GetOrderByIdAsync(int id)
   {
     return await _context.Orders
@@ -91,10 +107,10 @@ public class WarehouseRepository : IWarehouseRepository
   public async Task<IEnumerable<Order>> GetOrdersByNumberAsync(string number)
   {
     return await _context.Orders
-      .Where(o => o.OrderNumber.Contains(number, StringComparison.CurrentCultureIgnoreCase))
+      .Where(o => EF.Functions.Like(o.OrderNumber, $"%{number}%"))
       .ToListAsync();
   }
-  
+
   #endregion
 
   #region Create
@@ -130,7 +146,7 @@ public class WarehouseRepository : IWarehouseRepository
     await _context.Orders.AddAsync(order);
     return await SaveChangesAsync();
   }
-  
+
   #endregion
 
   #region Delete

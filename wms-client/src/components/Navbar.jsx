@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Settings, UserPlus, Crown } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import handleSmoothScroll from '../utils/handleSmoothScroll';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, LogOut, Settings, UserPlus, Crown } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import handleSmoothScroll from "../utils/handleSmoothScroll";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,18 +22,19 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { label: 'Home', path: '/' },
-    { label: 'Product Management', path: '/products' },
+    { label: "Home", path: "/" },
+    { label: "Product Management", path: "/products" },
+    { label: "Item Check In", path: "/check-in" },
   ];
 
   // Don't render navbar on login page
-  if (location.pathname === '/login') {
+  if (location.pathname === "/login") {
     return null;
   }
 
   return (
     <motion.nav
-      className='fixed top-0 w-full z-50 bg-primary-500 transition-all duration-300'
+      className="fixed top-0 w-full z-50 bg-primary-500 transition-all duration-300"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
@@ -47,42 +48,41 @@ const Navbar = () => {
             onClick={() => handleSmoothScroll()}
           >
             <div className="p-2 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg transform group-hover:scale-105 transition-transform duration-300">
-              <img
-                src="/WMS.svg"
-                alt="wms-client"
-                className="w-6 h-6"
-              />
+              <img src="/WMS.svg" alt="wms-client" className="w-6 h-6" />
             </div>
             <span className="font-bold text-xl text-white header-text">
-              <span className="hidden sm:inline">Warehouse Management System</span>
+              <span className="hidden sm:inline">
+                Warehouse Management System
+              </span>
               <span className="sm:hidden">WMS</span>
             </span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            {isAuthenticated && navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`relative font-medium transition-colors duration-300 ${
-                  location.pathname === item.path
-                    ? 'text-white'
-                    : 'text-gray-200 hover:text-white'
-                }`}
-                onClick={() => handleSmoothScroll()}
-              >
-                {item.label}
-                {location.pathname === item.path && (
-                  <motion.div
-                    className="absolute -bottom-1 left-0 w-full h-0.5 bg-white"
-                    layoutId="activeTab"
-                    initial={false}
-                  />
-                )}
-              </Link>
-            ))}
-            
+            {isAuthenticated &&
+              navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`relative font-medium transition-colors duration-300 ${
+                    location.pathname === item.path
+                      ? "text-white"
+                      : "text-gray-200 hover:text-white"
+                  }`}
+                  onClick={() => handleSmoothScroll()}
+                >
+                  {item.label}
+                  {location.pathname === item.path && (
+                    <motion.div
+                      className="absolute -bottom-1 left-0 w-full h-0.5 bg-white"
+                      layoutId="activeTab"
+                      initial={false}
+                    />
+                  )}
+                </Link>
+              ))}
+
             {isAuthenticated && (
               <div className="relative">
                 <button
@@ -93,8 +93,20 @@ const Navbar = () => {
                     <User className="w-4 h-4" />
                   </div>
                   <span className="font-medium">{user?.role}</span>
-                  <svg className={`w-4 h-4 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className={`w-4 h-4 transition-transform ${
+                      userMenuOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
 
@@ -112,16 +124,20 @@ const Navbar = () => {
                         </p>
                         <p className="text-sm text-gray-500">{user?.role}</p>
                         <p className="text-xs text-gray-400 mt-1">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            user?.role === 'Admin' ? 'bg-red-100 text-red-800' :
-                            user?.role === 'Manager' ? 'bg-blue-100 text-blue-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
+                          <span
+                            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                              user?.role === "Admin"
+                                ? "bg-red-100 text-red-800"
+                                : user?.role === "Manager"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-green-100 text-green-800"
+                            }`}
+                          >
                             {user?.role}
                           </span>
                         </p>
                       </div>
-                      
+
                       <Link
                         to="/profile"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -130,7 +146,7 @@ const Navbar = () => {
                         <User className="w-4 h-4 mr-3" />
                         View Profile
                       </Link>
-                      
+
                       {isAdmin && (
                         <Link
                           to="/admin"
@@ -141,7 +157,7 @@ const Navbar = () => {
                           Admin Dashboard
                         </Link>
                       )}
-                      
+
                       {canManage && !isAdmin && (
                         <>
                           <Link
@@ -162,7 +178,7 @@ const Navbar = () => {
                           </Link>
                         </>
                       )}
-                      
+
                       <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors"
@@ -198,7 +214,7 @@ const Navbar = () => {
             <motion.div
               className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-lg border-t border-gray-200"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
@@ -210,11 +226,15 @@ const Navbar = () => {
                   </p>
                   <p className="text-sm text-gray-500">{user?.role}</p>
                   <p className="text-xs text-gray-400 mt-1">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      user?.role === 'Admin' ? 'bg-red-100 text-red-800' :
-                      user?.role === 'Manager' ? 'bg-blue-100 text-blue-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        user?.role === "Admin"
+                          ? "bg-red-100 text-red-800"
+                          : user?.role === "Manager"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
                       {user?.role}
                     </span>
                   </p>
@@ -232,8 +252,8 @@ const Navbar = () => {
                       to={item.path}
                       className={`block py-3 px-4 rounded-lg font-medium transition-colors duration-300 ${
                         location.pathname === item.path
-                          ? 'bg-indigo-50 text-indigo-600'
-                          : 'text-gray-700 hover:bg-gray-50'
+                          ? "bg-indigo-50 text-indigo-600"
+                          : "text-gray-700 hover:bg-gray-50"
                       }`}
                       onClick={() => handleSmoothScroll()}
                     >
@@ -257,7 +277,7 @@ const Navbar = () => {
                       View Profile
                     </Link>
                   </motion.div>
-                  
+
                   {isAdmin && (
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
@@ -274,7 +294,7 @@ const Navbar = () => {
                       </Link>
                     </motion.div>
                   )}
-                  
+
                   {canManage && (
                     <>
                       <motion.div
@@ -307,7 +327,7 @@ const Navbar = () => {
                       </motion.div>
                     </>
                   )}
-                  
+
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}

@@ -1,27 +1,52 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ChevronUp, ChevronDown, ChevronsUpDown, Filter, Clock, User, AlertCircle, CheckCircle, XCircle, Shield, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getAllActions, getUserActions, getMyActions } from '../../utils/http/gets';
-import { getActionTypeIcon, getActionTypeColor, getUserRoleColor } from '../../utils/actionHelpers.jsx';
-import { formatDate } from '../../utils/helpers';
-import handleSmoothScroll from '../../utils/handleSmoothScroll';
-import Loading from '../Loading';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  ChevronUp,
+  ChevronDown,
+  ChevronsUpDown,
+  Filter,
+  Clock,
+  User,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Shield,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import {
+  getAllActions,
+  getUserActions,
+  getMyActions,
+} from "../../utils/http/gets";
+import {
+  getActionTypeIcon,
+  getActionTypeColor,
+  getUserRoleColor,
+} from "../../utils/actionHelpers.jsx";
+import { formatDate } from "../../utils/helpers";
+import handleSmoothScroll from "../../utils/handleSmoothScroll";
+import Loading from "../Loading";
 
 const ActionSort = ({ userId = null, showMyActions = false }) => {
   const [actions, setActions] = useState([]);
   const [filteredActions, setFilteredActions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: 'timestamp', direction: 'desc' });
-  const [filters, setFilters] = useState({
-    actionType: '',
-    entityType: '',
-    userRole: '',
-    isSuccessful: '',
-    dateRange: ''
+  const [sortConfig, setSortConfig] = useState({
+    key: "timestamp",
+    direction: "desc",
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({
+    actionType: "",
+    entityType: "",
+    userRole: "",
+    isSuccessful: "",
+    dateRange: "",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
@@ -32,7 +57,7 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
     visible: {
       opacity: 1,
       transition: { duration: 0.6, staggerChildren: 0.1 },
-    }
+    },
   };
 
   const itemVariants = {
@@ -62,7 +87,7 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
       setLoading(true);
       setError(null);
       let fetchedActions;
-      
+
       if (showMyActions) {
         fetchedActions = await getMyActions();
       } else if (userId) {
@@ -70,11 +95,11 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
       } else {
         fetchedActions = await getAllActions();
       }
-      
+
       setActions(fetchedActions);
     } catch (error) {
-      console.error('Failed to fetch actions:', error);
-      setError('Failed to load actions');
+      console.error("Failed to fetch actions:", error);
+      setError("Failed to load actions");
       setActions([]);
     } finally {
       setLoading(false);
@@ -82,9 +107,9 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
   };
 
   const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
     }
     setSortConfig({ key, direction });
   };
@@ -97,22 +122,22 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
       let bValue = b[sortConfig.key];
 
       // Handle date sorting
-      if (sortConfig.key === 'timestamp') {
+      if (sortConfig.key === "timestamp") {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
       }
 
       // Handle string sorting (case insensitive)
-      if (typeof aValue === 'string') {
+      if (typeof aValue === "string") {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
 
       if (aValue < bValue) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
+        return sortConfig.direction === "asc" ? -1 : 1;
       }
       if (aValue > bValue) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
+        return sortConfig.direction === "asc" ? 1 : -1;
       }
       return 0;
     });
@@ -123,45 +148,62 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
 
     // Apply search
     if (searchTerm) {
-      filtered = filtered.filter(action =>
-        action.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        action.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        action.entityName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        action.entityType?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (action) =>
+          action.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          action.description
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          action.entityName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          action.entityType?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Apply filters
     if (filters.actionType) {
-      filtered = filtered.filter(action => action.actionType === filters.actionType);
+      filtered = filtered.filter(
+        (action) => action.actionType === filters.actionType
+      );
     }
     if (filters.entityType) {
-      filtered = filtered.filter(action => action.entityType === filters.entityType);
+      filtered = filtered.filter(
+        (action) => action.entityType === filters.entityType
+      );
     }
     if (filters.userRole) {
-      filtered = filtered.filter(action => action.userRole === filters.userRole);
+      filtered = filtered.filter(
+        (action) => action.userRole === filters.userRole
+      );
     }
-    if (filters.isSuccessful !== '') {
-      filtered = filtered.filter(action => action.isSuccessful === (filters.isSuccessful === 'true'));
+    if (filters.isSuccessful !== "") {
+      filtered = filtered.filter(
+        (action) => action.isSuccessful === (filters.isSuccessful === "true")
+      );
     }
     if (filters.dateRange) {
       const now = new Date();
       let cutoffDate;
       switch (filters.dateRange) {
-        case 'today':
-          cutoffDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        case "today":
+          cutoffDate = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+          );
           break;
-        case 'week':
+        case "week":
           cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
           break;
-        case 'month':
+        case "month":
           cutoffDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
           break;
         default:
           cutoffDate = null;
       }
       if (cutoffDate) {
-        filtered = filtered.filter(action => new Date(action.timestamp) >= cutoffDate);
+        filtered = filtered.filter(
+          (action) => new Date(action.timestamp) >= cutoffDate
+        );
       }
     }
 
@@ -181,24 +223,26 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
     if (sortConfig.key !== columnKey) {
       return <ChevronsUpDown className="h-4 w-4 text-gray-400" />;
     }
-    return sortConfig.direction === 'asc' 
-      ? <ChevronUp className="h-4 w-4 text-blue-600" />
-      : <ChevronDown className="h-4 w-4 text-blue-600" />;
+    return sortConfig.direction === "asc" ? (
+      <ChevronUp className="h-4 w-4 text-blue-600" />
+    ) : (
+      <ChevronDown className="h-4 w-4 text-blue-600" />
+    );
   };
 
   const getUniqueValues = (key) => {
-    return [...new Set(actions.map(action => action[key]).filter(Boolean))];
+    return [...new Set(actions.map((action) => action[key]).filter(Boolean))];
   };
 
   const clearFilters = () => {
     setFilters({
-      actionType: '',
-      entityType: '',
-      userRole: '',
-      isSuccessful: '',
-      dateRange: ''
+      actionType: "",
+      entityType: "",
+      userRole: "",
+      isSuccessful: "",
+      dateRange: "",
     });
-    setSearchTerm('');
+    setSearchTerm("");
   };
 
   // Pagination helper functions
@@ -237,7 +281,7 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -245,7 +289,11 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
     >
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          {showMyActions ? 'My Actions' : userId ? 'User Actions' : 'All User Actions'}
+          {showMyActions
+            ? "My Actions"
+            : userId
+            ? "User Actions"
+            : "All User Actions"}
         </h2>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
@@ -265,14 +313,19 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-              showFilters ? 'bg-blue-50 text-blue-700 border-blue-300' : 'bg-white text-gray-700 hover:bg-gray-50'
+              showFilters
+                ? "bg-blue-50 text-blue-700 border-blue-300"
+                : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </button>
           <span className="text-sm text-gray-500">
-            {totalFilteredCount > 0 ? `${startIndex}-${endIndex} of ${totalFilteredCount}` : '0'} actions
+            {totalFilteredCount > 0
+              ? `${startIndex}-${endIndex} of ${totalFilteredCount}`
+              : "0"}{" "}
+            actions
           </span>
         </div>
       </div>
@@ -296,58 +349,80 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
         {showFilters && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="mb-6 border border-gray-200 rounded-lg p-4 bg-gray-50"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Action Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Action Type
+                </label>
                 <select
                   value={filters.actionType}
-                  onChange={(e) => setFilters({ ...filters, actionType: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, actionType: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Types</option>
-                  {getUniqueValues('actionType').map(type => (
-                    <option key={type} value={type}>{type}</option>
+                  {getUniqueValues("actionType").map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Entity Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Entity Type
+                </label>
                 <select
                   value={filters.entityType}
-                  onChange={(e) => setFilters({ ...filters, entityType: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, entityType: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Entities</option>
-                  {getUniqueValues('entityType').map(type => (
-                    <option key={type} value={type}>{type}</option>
+                  {getUniqueValues("entityType").map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">User Role</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  User Role
+                </label>
                 <select
                   value={filters.userRole}
-                  onChange={(e) => setFilters({ ...filters, userRole: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, userRole: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Roles</option>
-                  {getUniqueValues('userRole').map(role => (
-                    <option key={role} value={role}>{role}</option>
+                  {getUniqueValues("userRole").map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
                 <select
                   value={filters.isSuccessful}
-                  onChange={(e) => setFilters({ ...filters, isSuccessful: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, isSuccessful: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Status</option>
@@ -357,10 +432,14 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Date Range
+                </label>
                 <select
                   value={filters.dateRange}
-                  onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, dateRange: e.target.value })
+                  }
                   className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">All Time</option>
@@ -401,7 +480,7 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
 
       {/* Actions Table */}
       {!loading && !error && filteredActions.length > 0 && (
-        <motion.div 
+        <motion.div
           className="overflow-x-auto"
           variants={containerVariants}
           initial="hidden"
@@ -410,50 +489,50 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th 
-                  scope="col" 
+                <th
+                  scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                  onClick={() => handleSort('timestamp')}
+                  onClick={() => handleSort("timestamp")}
                 >
                   <div className="flex items-center space-x-1">
                     <span>Date</span>
-                    {getSortIcon('timestamp')}
+                    {getSortIcon("timestamp")}
                   </div>
                 </th>
-                <th 
-                  scope="col" 
+                <th
+                  scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                  onClick={() => handleSort('username')}
+                  onClick={() => handleSort("username")}
                 >
                   <div className="flex items-center space-x-1">
                     <span>User</span>
-                    {getSortIcon('username')}
+                    {getSortIcon("username")}
                   </div>
                 </th>
-                <th 
-                  scope="col" 
+                <th
+                  scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                  onClick={() => handleSort('actionType')}
+                  onClick={() => handleSort("actionType")}
                 >
                   <div className="flex items-center space-x-1">
                     <span>Action</span>
-                    {getSortIcon('actionType')}
+                    {getSortIcon("actionType")}
                   </div>
                 </th>
-                <th 
-                  scope="col" 
+                <th
+                  scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
-                  onClick={() => handleSort('entityType')}
+                  onClick={() => handleSort("entityType")}
                 >
                   <div className="flex items-center space-x-1">
                     <span>Entity</span>
-                    {getSortIcon('entityType')}
+                    {getSortIcon("entityType")}
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Status
                 </th>
                 <th scope="col" className="relative px-6 py-3">
@@ -463,7 +542,7 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredActions.map((action) => (
-                <motion.tr 
+                <motion.tr
                   key={action.id}
                   variants={itemVariants}
                   className="hover:bg-gray-50 transition-colors"
@@ -479,10 +558,14 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
                       <User className="h-4 w-4 mr-2 text-gray-400" />
                       <div>
                         <div className="text-sm font-medium text-gray-900">
-                          {action.username || 'Unknown User'}
+                          {action.username || "Unknown User"}
                         </div>
                         {action.userRole && (
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getUserRoleColor(action.userRole)}`}>
+                          <span
+                            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getUserRoleColor(
+                              action.userRole
+                            )}`}
+                          >
                             <Shield className="h-3 w-3 mr-1" />
                             {action.userRole}
                           </span>
@@ -493,7 +576,11 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {getActionTypeIcon(action.actionType)}
-                      <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getActionTypeColor(action.actionType)}`}>
+                      <span
+                        className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getActionTypeColor(
+                          action.actionType
+                        )}`}
+                      >
                         {action.actionType}
                       </span>
                     </div>
@@ -505,13 +592,10 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
                         <div className="text-gray-500">{action.entityName}</div>
                       )}
                       {action.entityId && (
-                        <div className="text-xs text-gray-400">ID: {action.entityId}</div>
+                        <div className="text-xs text-gray-400">
+                          ID: {action.entityId}
+                        </div>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
-                    <div className="truncate" title={action.description}>
-                      {action.description || 'No description'}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -528,12 +612,12 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link 
+                    <Link
                       to={`/action/${action.id}`}
                       onClick={() => handleSmoothScroll()}
                       className="text-blue-600 hover:text-blue-900 transition-colors"
                     >
-                      View Data
+                      View Details
                     </Link>
                   </td>
                 </motion.tr>
@@ -552,8 +636,8 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
         >
           <div className="flex items-center text-sm text-gray-700">
             <span>
-              Showing <span className="font-medium">{startIndex}</span> to{' '}
-              <span className="font-medium">{endIndex}</span> of{' '}
+              Showing <span className="font-medium">{startIndex}</span> to{" "}
+              <span className="font-medium">{endIndex}</span> of{" "}
               <span className="font-medium">{totalFilteredCount}</span> results
             </span>
           </div>
@@ -565,8 +649,8 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
               disabled={currentPage === 1}
               className={`relative inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 currentPage === 1
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
               }`}
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
@@ -597,8 +681,8 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
                   onClick={() => handlePageChange(page)}
                   className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                     page === currentPage
-                      ? 'bg-blue-600 text-white border border-blue-600'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      ? "bg-blue-600 text-white border border-blue-600"
+                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
                   }`}
                 >
                   {page}
@@ -628,8 +712,8 @@ const ActionSort = ({ userId = null, showMyActions = false }) => {
               disabled={currentPage === totalPages}
               className={`relative inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 currentPage === totalPages
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
               }`}
             >
               Next

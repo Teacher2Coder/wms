@@ -20,26 +20,33 @@ public class OrderController : ControllerBase
     _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     _warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
   }
-  
+
   [HttpGet]
   public async Task<IActionResult> GetOrders()
   {
     var orders = await _warehouseRepository.GetOrdersAsync();
-    return Ok(orders);
+    var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
+    return Ok(orderDtos);
   }
 
   [HttpGet("{orderId}")]
   public async Task<IActionResult> GetOrder(int orderId)
   {
     var order = await _warehouseRepository.GetOrderByIdAsync(orderId);
-    return Ok(order);
+    if (order == null)
+    {
+      return NotFound();
+    }
+    var orderDto = _mapper.Map<OrderDto>(order);
+    return Ok(orderDto);
   }
 
   [HttpGet("search")]
   public async Task<IActionResult> SearchOrders(string number)
   {
     var orders = await _warehouseRepository.GetOrdersByNumberAsync(number);
-    return Ok(orders);
+    var orderDtos = _mapper.Map<IEnumerable<OrderDto>>(orders);
+    return Ok(orderDtos);
   }
 
   [HttpPost]
@@ -48,7 +55,8 @@ public class OrderController : ControllerBase
   {
     var order = _mapper.Map<Order>(orderDto);
     await _warehouseRepository.CreateOrderAsync(order);
-    return Ok(order);
+    var createdOrderDto = _mapper.Map<OrderDto>(order);
+    return Ok(createdOrderDto);
   }
 
   [HttpPut("{orderId}")]
@@ -63,7 +71,8 @@ public class OrderController : ControllerBase
 
     _mapper.Map(orderDto, order);
     await _warehouseRepository.SaveChangesAsync();
-    return Ok(order);
+    var updatedOrderDto = _mapper.Map<OrderDto>(order);
+    return Ok(updatedOrderDto);
   }
 
   [HttpDelete("{orderId}")]

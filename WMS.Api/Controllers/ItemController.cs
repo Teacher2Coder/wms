@@ -37,7 +37,8 @@ public class ItemController : ControllerBase
   public async Task<IActionResult> SearchItems(string serialNumber)
   {
     var items = await _warehouseRepository.GetItemsBySerialNumberAsync(serialNumber);
-    return Ok(items);
+    var itemDtos = _mapper.Map<IEnumerable<ItemDto>>(items);
+    return Ok(itemDtos);
   }
 
 }
