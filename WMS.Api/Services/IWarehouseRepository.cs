@@ -14,6 +14,7 @@ public interface IWarehouseRepository
   Task<Product?> GetProductByIdAsync(int id);
   Task<IEnumerable<Product>> GetProductsByNameAsync(string name);
   Task<IEnumerable<Product>> GetProductsBySkuAsync(string sku);
+  Task<Product?> GetProductBySkuAsync(string sku);
   Task<Item?> GetItemByIdAsync(int id);
   Task<IEnumerable<Item>> GetItemsBySerialNumberAsync(string serialNumber);
   Task<IEnumerable<Order>> GetOrdersAsync();
@@ -23,7 +24,7 @@ public interface IWarehouseRepository
   Task<bool> CreateWarehouseAsync(Warehouse warehouse);
   Task<Section?> CreateSectionAsync(int warehouseId, Section section);
   Task<bool> CreateProductAsync(Product product);
-  Task<bool> CreateItemAsync(Item item);
+  Task<Item> CreateItemAsync(Item item);
   Task<bool> CreateOrderAsync(Order order);
 
   Task<bool> DeleteWarehouseAsync(int id);

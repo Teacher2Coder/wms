@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { getAllProducts } from '../utils/http/gets';
 import Loading from '../components/Loading';
-import ProductsOverview from '../components/product/ProductsOverview';
-import ProductList from '../components/product/ProductList';
+import ProductsOverview from '../components/product-manage/ProductsOverview';
+import ProductList from '../components/product-manage/ProductList';
 
 const Product = () => {
 
@@ -45,8 +45,6 @@ const Product = () => {
       transition: { duration: 0.6 },
     },
   };
-  
-  console.log(products);
 
   if (loading) {
     return <Loading />;
@@ -65,10 +63,18 @@ const Product = () => {
         <h1 className="text-3xl font-bold text-accent-800 mb-4">Products</h1>
         <div className="w-24 h-1 bg-primary-500 mx-auto rounded-full mb-12"></div>
         <div className="align-center">
-          <ProductsOverview products={products} variants={itemVarients} />
+          <ProductsOverview
+            products={products}
+            variants={itemVarients}
+            onRefresh={fetchProducts}
+          />
         </div>
       </motion.div>
-      <ProductList products={products} variants={itemVarients} />
+      <ProductList
+        products={products}
+        variants={itemVarients}
+        onRefresh={fetchProducts}
+      />
     </div>
   )
 }

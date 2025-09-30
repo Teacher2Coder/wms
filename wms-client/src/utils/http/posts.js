@@ -57,9 +57,33 @@ const createWarehouse = async (warehouse) => {
   }
 }
 
+const post = async (url, data) => {
+  try {
+    const response = await axios.post(`/api${url}`, data);
+    if (response.status === 200 || response.status === 201) {
+      return response.data;
+    }
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  } catch (err) {
+    console.error('API Error:', err);
+    if (err.response && err.response.data) {
+      throw new Error(err.response.data);
+    }
+    throw err;
+  }
+};
+
+// Order-related API calls
+const createOrder = (orderData) => post('/order', orderData);
+
+// Item-related API calls
+const checkInItem = (itemData) => post('/item/checkin', itemData);
+
 export {
   createItem,
   createSection,
   createProduct,
   createWarehouse,
+  createOrder,
+  checkInItem,
 }

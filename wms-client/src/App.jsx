@@ -13,7 +13,8 @@ import Admin from './pages/Admin.jsx';
 import Warehouse from './pages/Warehouse.jsx';
 import Section from './pages/Section.jsx';
 import Error from './pages/Error.jsx';
-import Products from './pages/Products.jsx';
+import ProductManagement from './pages/ProductManagement.jsx';
+import Product from './pages/Product.jsx';
 import Item from './pages/Item.jsx';
 import Action from './pages/Action.jsx';
 import UserProfile from './pages/UserProfile.jsx';
@@ -32,7 +33,8 @@ const AppContent = () => {
     { path: '/admin', element: <Admin /> },
     { path: '/warehouse/:id', element: <Warehouse /> },
     { path: '/warehouse/:warehouseId/section/:sectionId', element: <Section /> },
-    { path: '/products', element: <Products /> },
+    { path: '/products', element: <ProductManagement /> },
+    { path: '/product/:id', element: <Product /> },
     { path: '/item/:itemId', element: <Item /> },
     { path: '/action/:id', element: <Action /> },
     { path: '/user/:id', element: <UserProfile /> },

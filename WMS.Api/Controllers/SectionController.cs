@@ -10,7 +10,7 @@ namespace WMS.Api.Controllers;
 
 [ApiController]
 [Route("api/warehouse/{warehouseId}/section")]
-[Authorize] // Require authentication for all section operations
+//[Authorize] // Require authentication for all section operations
 public class SectionController : ControllerBase
 {
   private readonly IMapper _mapper;
@@ -22,6 +22,19 @@ public class SectionController : ControllerBase
     _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     _warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
     _actionLogService = actionLogService ?? throw new ArgumentNullException(nameof(actionLogService));
+  }
+
+  [HttpGet]
+  public async Task<IActionResult> GetSections(int warehouseId)
+  {
+    var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(warehouseId);
+    if (warehouse == null)
+    {
+      return NotFound("Warehouse not found");
+    }
+
+    var sectionDtos = _mapper.Map<IEnumerable<SectionDto>>(warehouse.Sections);
+    return Ok(sectionDtos);
   }
 
   [HttpGet("{sectionId}")]

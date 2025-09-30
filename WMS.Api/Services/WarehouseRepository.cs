@@ -28,7 +28,7 @@ public class WarehouseRepository : IWarehouseRepository
   {
     return await _context.Warehouses
       .Include(w => w.Sections)
-      .Where(w => EF.Functions.Like(w.Name, $"%{name}%"))
+      .Where(w => w.Name.ToLower().Contains(name.ToLower()))
       .ToListAsync();
   }
 
@@ -75,6 +75,13 @@ public class WarehouseRepository : IWarehouseRepository
       .Include(p => p.Items)
       .Where(p => EF.Functions.Like(p.Sku, $"%{sku}%"))
       .ToListAsync();
+  }
+
+  public async Task<Product?> GetProductBySkuAsync(string sku)
+  {
+    return await _context.Products
+      .Include(p => p.Items)
+      .FirstOrDefaultAsync(p => p.Sku.ToLower() == sku.ToLower());
   }
 
   public async Task<Item?> GetItemByIdAsync(int id)
@@ -135,10 +142,11 @@ public class WarehouseRepository : IWarehouseRepository
     return await SaveChangesAsync();
   }
 
-  public async Task<bool> CreateItemAsync(Item item)
+  public async Task<Item> CreateItemAsync(Item item)
   {
     await _context.Items.AddAsync(item);
-    return await SaveChangesAsync();
+    await SaveChangesAsync();
+    return item;
   }
 
   public async Task<bool> CreateOrderAsync(Order order)

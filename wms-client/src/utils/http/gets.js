@@ -40,6 +40,11 @@ const searchProducts = async (name) => {
   return response.data;
 }
 
+const searchProductsBySku = async (sku) => {
+  const response = await axios.get(`/api/product/search/sku?sku=${sku}`);
+  return response.data;
+}
+
 const getProduct = async (productId) => {
   const response = await axios.get(`/api/product/${productId}`);
   return response.data;
@@ -109,6 +114,7 @@ export {
   getAllProducts,
   getSectionProducts,
   searchProducts,
+  searchProductsBySku,
   getProduct,
   getItems,
   getItem,

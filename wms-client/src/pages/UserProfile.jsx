@@ -33,7 +33,6 @@ const UserProfile = () => {
     const fetchUser = async () => {
       try {
         const user = await getUser(id);
-        console.log("User fetched:", user);
         setUser(user);
         setLoading(false);
       } catch (error) {
@@ -48,7 +47,6 @@ const UserProfile = () => {
         setActionsError(null);
         const userActions = await getUserActions(id);
         setActions(userActions);
-        console.log("User actions fetched:", userActions);
       } catch (error) {
         console.error("Failed to fetch user actions:", error);
         setActionsError("Failed to load your activity history");

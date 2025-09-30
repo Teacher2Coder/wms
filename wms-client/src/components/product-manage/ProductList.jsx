@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
 
-const ProductList = ({ products, variants }) => {
+const ProductList = ({ products, variants, onRefresh }) => {
   const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
   const { canManage } = useAuth(); // Only Admin and Manager can create products
   
@@ -73,7 +73,10 @@ const ProductList = ({ products, variants }) => {
                     {/* Content */}
                     <div className="space-y-3">
                       <h3 className="text-xl font-bold text-accent-800 group-hover:text-primary-600 transition-colors duration-200">
-                        {product.sku}
+                        {product.name}
+                      </h3>
+                      <h3 className="text-xl font-bold text-accent-800 group-hover:text-primary-600 transition-colors duration-200">
+                        SKU: {product.sku}
                       </h3>
                       <p className="text-accent-600 text-sm leading-relaxed line-clamp-2">
                         {product.description || 'No description available'}
@@ -117,6 +120,7 @@ const ProductList = ({ products, variants }) => {
       <CreateProductModal 
         isOpen={isCreateProductModalOpen} 
         onClose={() => setIsCreateProductModalOpen(false)} 
+        onSuccess={onRefresh}
       />
     </div>
   )

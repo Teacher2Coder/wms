@@ -4,7 +4,7 @@ import CreateProductModal from './CreateProductModal';
 import DeleteModal from '../DeleteModal';
 import { useAuth } from '../../contexts/AuthContext';
 
-const ProductsOverview = ({ products, variants }) => {
+const ProductsOverview = ({ products, variants, onRefresh }) => {
   const [isCreateProductModalOpen, setIsCreateProductModalOpen] = useState(false);
   const { canManage } = useAuth(); // Only Admin and Manager can create products
   
@@ -41,10 +41,10 @@ const ProductsOverview = ({ products, variants }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-accent-800">
-                Products Management
+                Product Management
               </h2>
               <p className="text-accent-500 text-sm font-medium uppercase tracking-wide">
-                Products Overview
+                System Overview
               </p>
             </div>
           </div>
@@ -247,6 +247,7 @@ const ProductsOverview = ({ products, variants }) => {
       <CreateProductModal 
         isOpen={isCreateProductModalOpen}
         onClose={() => setIsCreateProductModalOpen(false)}
+        onSuccess={onRefresh}
       />
     </div>
   );

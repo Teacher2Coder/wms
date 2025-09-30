@@ -5,6 +5,7 @@ import { getSection } from '../utils/http/gets';
 import SectionOverview from '../components/section/SectionOverview';
 import Loading from '../components/Loading';
 import GoBack from '../components/GoBack';
+import ItemList from '../components/section/ItemList';
 
 const Section = () => {
 
@@ -53,6 +54,8 @@ const Section = () => {
     return <Loading />;
   }
 
+  const items = section.items;
+
   return (
     <div className="min-h-screen gradient-bg">
       <motion.div
@@ -78,6 +81,7 @@ const Section = () => {
           <SectionOverview section={section} warehouseId={warehouseId} variants={cardVariants} />
         </motion.div>
       </motion.div>
+      <ItemList items={items} />
     </div>
   );
 };

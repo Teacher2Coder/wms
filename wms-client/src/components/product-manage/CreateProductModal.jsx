@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { createProduct } from '../../utils/http/posts';
 
-const CreateProductModal = ({ isOpen, onClose }) => {
+const CreateProductModal = ({ isOpen, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     Sku: '',
+    Name: '',
     Description: '',
-    SectionId: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -21,9 +21,12 @@ const CreateProductModal = ({ isOpen, onClose }) => {
     try {
       const product = await createProduct(formData);
       if (product) {
+        setFormData({ Sku: '', Name: '', Description: '' });
         onClose();
-        setFormData({ Sku: '', Description: '', SectionId: '' });
-        window.location.reload(); // Refresh to show new product
+        // Call onSuccess callback to refresh parent data
+        if (onSuccess) {
+          onSuccess();
+        }
       }
     } catch (err) {
       console.error('Error creating product:', err);
@@ -79,10 +82,26 @@ const CreateProductModal = ({ isOpen, onClose }) => {
               placeholder="Enter product SKU"
             />
           </div>
+
+          <div>
+            <label htmlFor="Name" className="block text-sm font-medium text-accent-700 mb-2">
+              Product Name *
+            </label>
+            <input
+              type="text"
+              id="Name"
+              name="Name"
+              value={formData.Name}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 border border-accent-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              placeholder="Enter product name"
+            />
+          </div>
           
           <div>
             <label htmlFor="Description" className="block text-sm font-medium text-accent-700 mb-2">
-              Description
+              Product Description
             </label>
             <textarea
               id="Description"

@@ -25,7 +25,6 @@ const Profile = () => {
         setActionsError(null);
         const userActions = await getMyActions();
         setActions(userActions);
-        console.log("User actions fetched:", userActions);
       } catch (error) {
         console.error("Failed to fetch user actions:", error);
         setActionsError("Failed to load your activity history");
