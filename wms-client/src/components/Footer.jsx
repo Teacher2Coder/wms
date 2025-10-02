@@ -6,6 +6,7 @@ const Footer = () => {
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'Product Management', path: '/products' },
+    { label: 'Item Check In', path: '/check-in' },
   ];
 
   // Don't render footer on login page

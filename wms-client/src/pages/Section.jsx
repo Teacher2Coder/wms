@@ -5,7 +5,7 @@ import { getSection } from '../utils/http/gets';
 import SectionOverview from '../components/section/SectionOverview';
 import Loading from '../components/Loading';
 import GoBack from '../components/GoBack';
-import ItemList from '../components/section/ItemList';
+import ItemList from '../components/item/ItemList';
 
 const Section = () => {
 
@@ -78,10 +78,18 @@ const Section = () => {
           animate="visible"
           className="align-center"
         >
-          <SectionOverview section={section} warehouseId={warehouseId} variants={cardVariants} />
+          <SectionOverview 
+            section={section} 
+            warehouseId={warehouseId} 
+            variants={cardVariants} 
+          />
         </motion.div>
       </motion.div>
-      <ItemList items={items} />
+      <ItemList
+        items={items}
+        warehouseId={warehouseId}
+        sectionId={sectionId}
+      />
     </div>
   );
 };

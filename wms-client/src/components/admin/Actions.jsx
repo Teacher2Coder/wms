@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Clock, User, AlertCircle, CheckCircle, XCircle, Shield, Globe } from "lucide-react";
-import { getActionTypeIcon, getActionTypeColor, getUserRoleColor } from "../../utils/actionHelpers.jsx";
+import { getActionTypeIcon, getActionTypeColor, getUserRoleColor } from "../../utils/componentHelpers.jsx";
 import { formatDate } from "../../utils/helpers";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
 

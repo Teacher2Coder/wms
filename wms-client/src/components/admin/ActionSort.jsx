@@ -25,7 +25,7 @@ import {
   getActionTypeIcon,
   getActionTypeColor,
   getUserRoleColor,
-} from "../../utils/actionHelpers.jsx";
+} from "../../utils/componentHelpers.jsx";
 import { formatDate } from "../../utils/helpers";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
 import Loading from "../Loading";

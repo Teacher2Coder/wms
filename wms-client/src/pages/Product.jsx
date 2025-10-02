@@ -5,7 +5,7 @@ import { getProduct } from '../utils/http/gets';
 import Loading from '../components/Loading';
 import NotFound from '../components/NotFound';
 import GoBack from '../components/GoBack';
-import ItemList from '../components/product/ItemList';
+import ItemList from '../components/product/ProductItemList';
 
 const Product = () => {
   const { id } = useParams();

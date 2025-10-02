@@ -54,13 +54,6 @@ public class ItemController : ControllerBase
         return BadRequest("SKU and Serial Number are required.");
       }
 
-      // Check if serial number is unique
-      var existingItems = await _warehouseRepository.GetItemsBySerialNumberAsync(itemCheckinDto.SerialNumber);
-      if (existingItems.Any(item => item.SerialNumber != null && item.SerialNumber.ToLower() == itemCheckinDto.SerialNumber.ToLower()))
-      {
-        return BadRequest($"An item with serial number '{itemCheckinDto.SerialNumber}' already exists.");
-      }
-
       // Validate warehouse exists
       var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(itemCheckinDto.Warehouse);
       if (warehouse == null)
@@ -87,6 +80,13 @@ public class ItemController : ControllerBase
         return BadRequest($"Product with SKU '{itemCheckinDto.Sku}' not found.");
       }
 
+      // Check if serial number is unique for this specific product
+      var existingItem = await _warehouseRepository.GetItemBySerialNumberAndProductIdAsync(itemCheckinDto.SerialNumber, product.Id);
+      if (existingItem != null)
+      {
+        return BadRequest($"An item with serial number '{itemCheckinDto.SerialNumber}' already exists for product '{product.Name}' (SKU: {product.Sku}).");
+      }
+
       // Create new item
       var newItem = new Item
       {
@@ -107,6 +107,72 @@ public class ItemController : ControllerBase
     catch (Exception ex)
     {
       return StatusCode(500, $"An error occurred while checking in the item: {ex.Message}");
+    }
+  }
+
+  [HttpPut("{itemId}")]
+  public async Task<IActionResult> UpdateItem(int itemId, ItemUpdateDto itemUpdateDto)
+  {
+    try
+    {
+      // Validate required fields
+      if (string.IsNullOrWhiteSpace(itemUpdateDto.SerialNumber))
+      {
+        return BadRequest("Serial Number is required.");
+      }
+
+      // Get the existing item
+      var existingItem = await _warehouseRepository.GetItemByIdAsync(itemId);
+      if (existingItem == null)
+      {
+        return NotFound($"Item with ID {itemId} not found.");
+      }
+
+      // Validate warehouse exists
+      var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(itemUpdateDto.Warehouse);
+      if (warehouse == null)
+      {
+        return BadRequest($"Warehouse with ID {itemUpdateDto.Warehouse} not found.");
+      }
+
+      // Validate section exists and belongs to the warehouse
+      var section = await _warehouseRepository.GetSectionByIdAsync(itemUpdateDto.Section);
+      if (section == null)
+      {
+        return BadRequest($"Section with ID {itemUpdateDto.Section} not found.");
+      }
+
+      if (section.WarehouseId != itemUpdateDto.Warehouse)
+      {
+        return BadRequest("The selected section does not belong to the selected warehouse.");
+      }
+
+      // Check if serial number is unique for this product (excluding current item)
+      var duplicateItem = await _warehouseRepository.GetItemBySerialNumberAndProductIdAsync(itemUpdateDto.SerialNumber, existingItem.ProductId);
+      if (duplicateItem != null && duplicateItem.Id != itemId)
+      {
+        return BadRequest($"An item with serial number '{itemUpdateDto.SerialNumber}' already exists for this product.");
+      }
+
+      // Update the item properties
+      existingItem.SerialNumber = itemUpdateDto.SerialNumber;
+      existingItem.Status = itemUpdateDto.Status;
+      existingItem.SectionId = itemUpdateDto.Section;
+
+      // Save the changes
+      var updateResult = await _warehouseRepository.UpdateItemAsync(existingItem);
+      if (!updateResult)
+      {
+        return StatusCode(500, "Failed to update the item.");
+      }
+
+      // Return the updated item
+      var updatedItemDto = _mapper.Map<ItemDto>(existingItem);
+      return Ok(updatedItemDto);
+    }
+    catch (Exception ex)
+    {
+      return StatusCode(500, $"An error occurred while updating the item: {ex.Message}");
     }
   }
 

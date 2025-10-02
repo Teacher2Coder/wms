@@ -9,5 +9,6 @@ public class ItemDto
   public string SerialNumber { get; set; } = string.Empty;
   public ItemStatus Status { get; set; }
   public int ProductId { get; set; }
+  public string ProductName { get; set; } = string.Empty;
   public int SectionId { get; set; }
 }

@@ -1,22 +1,12 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import EditItemModal from '../item/EditItemModal';
+import { getStatusColor, getStatusIcon } from '../../utils/componentHelpers';
 
 const ItemList = ({ items }) => {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Available':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-      case 'Reserved':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'InTransit':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Damaged':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'Expired':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+
+  const [isEditItemModalOpen, setIsEditItemModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -57,6 +47,11 @@ const ItemList = ({ items }) => {
       }
     }
   };
+
+  const handleViewDetails = (item) => {
+    setSelectedItem(item);
+    setIsEditItemModalOpen(true);
+  }
 
   return (
     <motion.div 
@@ -113,10 +108,14 @@ const ItemList = ({ items }) => {
                 </div>
                 <div>
                   <motion.span 
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}
+                    className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-xs font-semibold border ${getStatusColor(item.status)}`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
                   >
+                    <span className="text-sm">{getStatusIcon(item.status)}</span>
                     {item.status}
                   </motion.span>
                 </div>
@@ -125,7 +124,7 @@ const ItemList = ({ items }) => {
                     className="text-primary-600 hover:text-primary-700 font-medium text-sm px-3 py-1 rounded-md hover:bg-primary-50 transition-colors duration-200"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => console.log('View item:', item.id)}
+                    onClick={() => handleViewDetails(item)}
                   >
                     View Details
                   </motion.button>
@@ -182,6 +181,12 @@ const ItemList = ({ items }) => {
           <div className="text-xs font-medium text-accent-500 uppercase tracking-wide">In Transit</div>
         </motion.div>
       </motion.div>
+      <EditItemModal
+        isOpen={isEditItemModalOpen}
+        onClose={() => setIsEditItemModalOpen(false)}
+        onDelete={() => {}}
+        item={selectedItem}
+      />
     </motion.div>
   )
 }

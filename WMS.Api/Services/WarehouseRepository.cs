@@ -21,6 +21,7 @@ public class WarehouseRepository : IWarehouseRepository
     return await _context.Warehouses
       .Include(w => w.Sections)
         .ThenInclude(s => s.Items)
+          .ThenInclude(i => i.Product)
       .ToListAsync();
   }
 
@@ -37,6 +38,7 @@ public class WarehouseRepository : IWarehouseRepository
     return await _context.Warehouses
       .Include(w => w.Sections)
         .ThenInclude(s => s.Items)
+          .ThenInclude(i => i.Product)
       .FirstOrDefaultAsync(w => w.Id == id);
   }
 
@@ -44,6 +46,7 @@ public class WarehouseRepository : IWarehouseRepository
   {
     return await _context.Sections
       .Include(s => s.Items)
+      .ThenInclude(i => i.Product)
       .FirstOrDefaultAsync(s => s.Id == id);
   }
 
@@ -87,14 +90,25 @@ public class WarehouseRepository : IWarehouseRepository
   public async Task<Item?> GetItemByIdAsync(int id)
   {
     return await _context.Items
+      .Include(i => i.Product)
       .FirstOrDefaultAsync(i => i.Id == id);
   }
 
   public async Task<IEnumerable<Item>> GetItemsBySerialNumberAsync(string serialNumber)
   {
     return await _context.Items
+      .Include(i => i.Product)
       .Where(i => EF.Functions.Like(i.SerialNumber, $"%{serialNumber}%"))
       .ToListAsync();
+  }
+
+  public async Task<Item?> GetItemBySerialNumberAndProductIdAsync(string serialNumber, int productId)
+  {
+    return await _context.Items
+      .Include(i => i.Product)
+      .FirstOrDefaultAsync(i => i.SerialNumber != null && 
+                                i.SerialNumber.ToLower() == serialNumber.ToLower() && 
+                                i.ProductId == productId);
   }
 
   public async Task<IEnumerable<Order>> GetOrdersAsync()
@@ -152,6 +166,16 @@ public class WarehouseRepository : IWarehouseRepository
   public async Task<bool> CreateOrderAsync(Order order)
   {
     await _context.Orders.AddAsync(order);
+    return await SaveChangesAsync();
+  }
+
+  #endregion
+
+  #region Update
+
+  public async Task<bool> UpdateItemAsync(Item item)
+  {
+    _context.Items.Update(item);
     return await SaveChangesAsync();
   }
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getAction } from '../utils/http/gets';
 import { motion } from 'framer-motion';
 import { User, CheckCircle, XCircle, Shield, Globe, Calendar, Monitor } from "lucide-react";
-import { getActionTypeIcon, getActionTypeColor, getUserRoleColor } from '../utils/actionHelpers';
+import { getActionTypeIcon, getActionTypeColor, getUserRoleColor } from '../utils/componentHelpers';
 import { formatDate } from '../utils/helpers';
 import Loading from '../components/Loading';
 import GoBack from '../components/GoBack';

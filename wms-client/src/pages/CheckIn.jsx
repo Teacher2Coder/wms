@@ -52,12 +52,10 @@ const CheckIn = () => {
 
   // Handle product search
   const handleSkuSearch = async (value) => {
-    console.log('handleSkuSearch called with value:', value);
     setSearchTerm(value);
     setIsDropdownOpen(true);
 
     if (value.trim().length < 2) {
-      console.log('Value too short, returning early');
       setSearchResults([]);
       setIsSearching(false);
       return;

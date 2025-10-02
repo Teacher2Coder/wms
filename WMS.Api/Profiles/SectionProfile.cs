@@ -9,7 +9,8 @@ public class SectionProfile : Profile
 {
   public SectionProfile()
   {
-    CreateMap<Section, SectionDto>();
+    CreateMap<Section, SectionDto>()
+      .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
     CreateMap<SectionDto, Section>()
       .ForMember(dest => dest.Items, opt => opt.Ignore())
       .ForMember(dest => dest.Warehouse, opt => opt.Ignore())
