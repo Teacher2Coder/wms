@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, Edit3, Key, Calendar, Shield } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
-import { getMyActions } from "../utils/http/gets";
+import { getMyActions } from "../utils/http/api";
 import Actions from "../components/admin/Actions";
 import EditProfile from "../components/profile/EditProfile";
 import EditPassword from "../components/profile/EditPassword";

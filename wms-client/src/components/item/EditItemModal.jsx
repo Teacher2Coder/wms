@@ -1,40 +1,45 @@
-import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { getWarehouses } from '../../utils/http/gets';
-import { updateItem } from '../../utils/http/updates';
+import { getWarehouses, updateItem } from '../../utils/http/api';
+import EditModal from '../shared/EditModal';
 
-const EditItemModal = ({ isOpen, onClose, item, warehouseId, sectionId }) => {
-  const { isAdmin } = useAuth();
-
+const EditItemModal = ({ isOpen, onClose, item, warehouseId, sectionId, onDelete }) => {
   const [warehouses, setWarehouses] = useState([]);
-
-  const [formData, setFormData] = useState({
-    SerialNumber: '',
-    Status: '',
-    Warehouse: '',
-    Section: '',
-  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchWarehouses = async () => {
-      const warehouses = await getWarehouses();
-      setWarehouses(warehouses);
-    }
+      try {
+        const warehousesData = await getWarehouses();
+        setWarehouses(warehousesData);
+      } catch (error) {
+        console.error('Failed to fetch warehouses:', error);
+      }
+    };
 
-    fetchWarehouses();
-    
-    if (item) {
-      setFormData({
-        SerialNumber: item.serialNumber || '',
-        Status: item.status || '',
-        Warehouse: warehouseId ? String(warehouseId) : '',
-        Section: sectionId ? String(sectionId) : '',
-      });
+    if (isOpen) {
+      fetchWarehouses();
     }
-  }, [item, warehouseId, sectionId]);
+  }, [isOpen]);
 
-  const handleChange = (e) => {
+  const handleSubmit = async (formData) => {
+    setLoading(true);
+    try {
+      const updatedItem = {
+        ...formData,
+        Section: parseInt(formData.Section),
+        Warehouse: parseInt(formData.Warehouse),
+      };
+
+      await updateItem(item.id, updatedItem);
+      onClose();
+    } catch (error) {
+      console.error('Failed to update item:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (formData, setFormData, e) => {
     const { name, value } = e.target;
     
     // If warehouse changes, reset section to empty
@@ -43,148 +48,136 @@ const EditItemModal = ({ isOpen, onClose, item, warehouseId, sectionId }) => {
     } else {
       setFormData({ ...formData, [name]: value });
     }
-  }
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const itemIcon = (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+    </svg>
+  );
 
-    console.log(formData);
+  const serialIcon = (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+    </svg>
+  );
 
-    console.log(typeof formData.Section);
-    console.log(typeof formData.Warehouse);
+  const statusIcon = (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  );
 
-    const sectionAsInt = parseInt(formData.Section);
-    const warehouseAsInt = parseInt(formData.Warehouse);
+  const warehouseIcon = (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+    </svg>
+  );
 
-    const updatedItem = {
-      ...formData,
-      Section: sectionAsInt,
-      Warehouse: warehouseAsInt,
-    };
+  const sectionIcon = (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+    </svg>
+  );
 
-    console.log(updatedItem);
+  // Status options
+  const statusOptions = [
+    { value: 'Available', label: 'Available' },
+    { value: 'InTransit', label: 'In Transit' },
+    { value: 'Reserved', label: 'Reserved' },
+    { value: 'Damaged', label: 'Damaged' },
+    { value: 'Expired', label: 'Expired' }
+  ];
 
-    await updateItem(item.id, updatedItem);
-    onClose();
-  }
-  
+  // Warehouse options
+  const warehouseOptions = warehouses.map(warehouse => ({
+    value: warehouse.id,
+    label: warehouse.name
+  }));
+
+  // Section options based on selected warehouse
+  const getSectionOptions = (warehouseId) => {
+    if (!warehouseId) return [];
+    const warehouse = warehouses.find(w => w.id == warehouseId);
+    return warehouse?.sections?.map(section => ({
+      value: section.id,
+      label: section.name
+    })) || [];
+  };
+
+  const fields = [
+    {
+      name: 'SerialNumber',
+      label: 'Serial Number',
+      required: true,
+      icon: serialIcon
+    },
+    {
+      name: 'Status',
+      label: 'Status',
+      type: 'select',
+      required: true,
+      options: statusOptions,
+      icon: statusIcon
+    },
+    {
+      name: 'Warehouse',
+      label: 'Warehouse',
+      type: 'select',
+      required: true,
+      options: warehouseOptions,
+      placeholder: 'Select a warehouse',
+      icon: warehouseIcon
+    },
+    {
+      name: 'Section',
+      label: 'Section',
+      type: 'select',
+      required: true,
+      options: [], // Will be populated dynamically
+      placeholder: 'Select a section',
+      icon: sectionIcon,
+      disabled: true // Will be enabled when warehouse is selected
+    }
+  ];
+
+  const initialData = item ? {
+    SerialNumber: item.serialNumber || '',
+    Status: item.status || '',
+    Warehouse: warehouseId ? String(warehouseId) : '',
+    Section: sectionId ? String(sectionId) : '',
+  } : {};
+
   if (!isOpen || !item) {
     return null;
   }
-  
+
   return (
-    <motion.div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div 
-        className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-2xl font-bold text-accent-800 mb-6">Item Details</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="SerialNumber" className="block text-sm font-medium text-accent-700 mb-1">
-              Serial Number
-            </label>
-            <input 
-              type="text" 
-              id="SerialNumber" 
-              name="SerialNumber" 
-              value={formData.SerialNumber} 
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-accent-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label htmlFor="Status" className="block text-sm font-medium text-accent-700 mb-1">
-              Status
-            </label>
-            <select 
-              id="Status" 
-              name="Status" 
-              value={formData.Status} 
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-accent-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            >
-              <option value="Available">Available</option>
-              <option value="InTransit">In Transit</option>
-              <option value="Reserved">Reserved</option>
-              <option value="Damaged">Damaged</option>
-              <option value="Expired">Expired</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="Warehouse" className="block text-sm font-medium text-accent-700 mb-1">
-              Warehouse
-            </label>
-            <select 
-              id="Warehouse" 
-              name="Warehouse" 
-              value={formData.Warehouse} 
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-accent-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            >
-              <option value="">Select a warehouse</option>
-              {warehouses.map((warehouse) => (
-                <option key={warehouse.id} value={warehouse.id}>{warehouse.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="Section" className="block text-sm font-medium text-accent-700 mb-1">
-              Section
-            </label>
-            <select 
-              id="Section" 
-              name="Section" 
-              value={formData.Section} 
-              onChange={handleChange}
-              disabled={!formData.Warehouse}
-              className="w-full px-3 py-2 border border-accent-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-            >
-              <option value="">
-                {formData.Warehouse ? "Select a section" : "Select a warehouse first"}
-              </option>
-              {formData.Warehouse && warehouses.find((warehouse) => warehouse.id == formData.Warehouse)?.sections?.map((section) => (
-                <option key={section.id} value={section.id}>{section.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="flex justify-end space-x-3 pt-4">
-            <button 
-              type="button" 
-              onClick={onClose}
-              className="px-4 py-2 text-accent-600 border border-accent-300 rounded-md hover:bg-accent-50 transition-colors duration-200"
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit"
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors duration-200"
-            >
-              Save
-            </button>
-            {isAdmin && (
-              <button 
-                type="button" 
-                onClick={() => console.log("Item being deleted:", item)}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200"
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        </form>
-      </motion.div>
-    </motion.div>
-  )
-}
+    <EditModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      onDelete={onDelete}
+      title="Edit Item"
+      subtitle="Update item information and location"
+      icon={itemIcon}
+      fields={fields.map(field => {
+        if (field.name === 'Section') {
+          return {
+            ...field,
+            options: getSectionOptions(initialData.Warehouse),
+            disabled: !initialData.Warehouse
+          };
+        }
+        return field;
+      })}
+      initialData={initialData}
+      submitText="Save Changes"
+      loading={loading}
+      allowDelete={true}
+      customHandleChange={handleChange}
+    />
+  );
+};
 
 export default EditItemModal;

@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { searchProductsBySku, searchWarehouses, getSections } from "../utils/http/gets";
-import { checkInItem } from "../utils/http/posts";
+import { searchProductsBySku, searchWarehouses, getSections, checkInItem } from "../utils/http/api";
 import SuccessMessage from "../components/SuccessMessage";
 
 const CheckIn = () => {

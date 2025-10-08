@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getAction } from '../utils/http/gets';
+import { getAction } from '../utils/http/api';
 import { motion } from 'framer-motion';
 import { User, CheckCircle, XCircle, Shield, Globe, Calendar, Monitor } from "lucide-react";
 import { getActionTypeIcon, getActionTypeColor, getUserRoleColor } from '../utils/componentHelpers';

@@ -22,7 +22,7 @@ import Security from "../components/admin/Security.jsx";
 import DataManagement from "../components/admin/DataManagement.jsx";
 import Analytics from "../components/admin/Analytics.jsx";
 import handleSmoothScroll from "../utils/handleSmoothScroll";
-import { getAllActions } from "../utils/http/gets";
+import { getAllActions } from "../utils/http/api";
 
 const Admin = () => {
   const { user, isAdmin } = useAuth();

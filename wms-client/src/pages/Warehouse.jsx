@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import WarehouseOverview from '../components/warehouse/WarehouseOverview';
 import Sections from '../components/warehouse/Sections';
-import { getWarehouse } from '../utils/http/gets';
+import { getWarehouse } from '../utils/http/api';
 import Loading from '../components/Loading';
 import NotFound from '../components/NotFound';
 import GoBack from '../components/GoBack';

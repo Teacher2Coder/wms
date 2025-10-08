@@ -1,8 +1,25 @@
 import { motion } from "framer-motion";
 import { Shield, Lock, AlertTriangle } from "lucide-react";
 import ActionSort from "./ActionSort";
+import AdminSection from "../shared/AdminSection";
+import AdminCard from "../shared/AdminCard";
 
 const Security = ({ stats }) => {
+  const securityCards = [
+    {
+      title: "Failed Login Attempts",
+      value: 0,
+      icon: <AlertTriangle className="h-8 w-8" />,
+      color: "red"
+    },
+    {
+      title: "Active Sessions",
+      value: stats.activeUsers,
+      icon: <Shield className="h-8 w-8" />,
+      color: "green"
+    }
+  ];
+
   return (
     <div>
       <motion.div
@@ -12,31 +29,27 @@ const Security = ({ stats }) => {
         exit={{ opacity: 0, y: -20 }}
         className="space-y-6"
       >
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">
-            Security Center
-          </h2>
-
+        <AdminSection
+          title="Security Center"
+          subtitle="Monitor security events and system protection"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-lg p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-red-100">Failed Login Attempts</p>
-                  <p className="text-3xl font-bold">0</p>
-                </div>
-                <AlertTriangle className="h-8 w-8 text-red-200" />
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-100">Active Sessions</p>
-                  <p className="text-3xl font-bold">{stats.activeUsers}</p>
-                </div>
-                <Shield className="h-8 w-8 text-green-200" />
-              </div>
-            </div>
+            {securityCards.map((card, index) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <AdminCard
+                  title={card.title}
+                  value={card.value}
+                  icon={card.icon}
+                  color={card.color}
+                  variant="gradient"
+                />
+              </motion.div>
+            ))}
           </div>
 
           <div className="space-y-4">
@@ -70,7 +83,8 @@ const Security = ({ stats }) => {
               </span>
             </div>
           </div>
-        </div>
+        </AdminSection>
+        
         <ActionSort />
       </motion.div>
     </div>

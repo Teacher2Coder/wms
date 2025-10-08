@@ -1,7 +1,36 @@
 import { motion } from "framer-motion";
 import { Server, Database, Activity, Download } from "lucide-react";
+import AdminSection from "../shared/AdminSection";
+import AdminCard from "../shared/AdminCard";
 
 const SystemHealth = ({ stats }) => {
+  const healthCards = [
+    {
+      title: "API Status",
+      value: "Online",
+      icon: <Server className="h-8 w-8" />,
+      color: "green"
+    },
+    {
+      title: "Database",
+      value: "Connected",
+      icon: <Database className="h-8 w-8" />,
+      color: "blue"
+    },
+    {
+      title: "Uptime",
+      value: stats.systemUptime,
+      icon: <Activity className="h-8 w-8" />,
+      color: "purple"
+    },
+    {
+      title: "Last Backup",
+      value: "Today",
+      icon: <Download className="h-8 w-8" />,
+      color: "orange"
+    }
+  ];
+
   return (
     <motion.div
       key="system"
@@ -10,51 +39,27 @@ const SystemHealth = ({ stats }) => {
       exit={{ opacity: 0, y: -20 }}
       className="space-y-6"
     >
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
-          System Health Monitor
-        </h2>
-
+      <AdminSection
+        title="System Health Monitor"
+        subtitle="Real-time system status and performance metrics"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-100">API Status</p>
-                <p className="text-2xl font-bold">Online</p>
-              </div>
-              <Server className="h-8 w-8 text-green-200" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100">Database</p>
-                <p className="text-2xl font-bold">Connected</p>
-              </div>
-              <Database className="h-8 w-8 text-blue-200" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-purple-100">Uptime</p>
-                <p className="text-2xl font-bold">{stats.systemUptime}</p>
-              </div>
-              <Activity className="h-8 w-8 text-purple-200" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-100">Last Backup</p>
-                <p className="text-xl font-bold">Today</p>
-              </div>
-              <Download className="h-8 w-8 text-orange-200" />
-            </div>
-          </div>
+          {healthCards.map((card, index) => (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <AdminCard
+                title={card.title}
+                value={card.value}
+                icon={card.icon}
+                color={card.color}
+                variant="gradient"
+              />
+            </motion.div>
+          ))}
         </div>
 
         <div className="text-center py-8 text-gray-500">
@@ -62,7 +67,7 @@ const SystemHealth = ({ stats }) => {
           <p>System monitoring charts and logs would be displayed here</p>
           <p className="text-sm">Real-time performance metrics and alerts</p>
         </div>
-      </div>
+      </AdminSection>
     </motion.div>
   );
 };

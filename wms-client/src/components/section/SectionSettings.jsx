@@ -1,70 +1,77 @@
-import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { updateSection } from '../../utils/http/updates';
+import { updateSection } from '../../utils/http/api';
+import EditModal from '../shared/EditModal';
 
 const SectionSettings = ({ isOpen, onClose, onDelete, warehouseId, section }) => {
-  const [formData, setFormData] = useState({
-    Id: section.id,
-    Name: section.name,
-    Description: section.description
-  })
+  const [loading, setLoading] = useState(false);
 
-  const { isAdmin } = useAuth(); // Only Admin can delete sections
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (formData) => {
+    setLoading(true);
     try {
       await updateSection(warehouseId, section.id, formData);
+      location.reload();
     } catch (err) {
       console.error(err);
     } finally {
-      location.reload();
+      setLoading(false);
     }
-  }
+  };
 
-  if (!isOpen) return null;
+  const sectionIcon = (
+    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+    </svg>
+  );
+
+  const nameIcon = (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+    </svg>
+  );
+
+  const descriptionIcon = (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  );
+
+  const fields = [
+    {
+      name: 'Name',
+      label: 'Section Name',
+      required: true,
+      icon: nameIcon
+    },
+    {
+      name: 'Description',
+      label: 'Description',
+      type: 'textarea',
+      icon: descriptionIcon
+    }
+  ];
+
+  const initialData = {
+    Id: section.id,
+    Name: section.name,
+    Description: section.description
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
-    >
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="bg-white rounded-lg p-6 max-w-md w-full mx-4"
-      >
-        <h2 className="text-2xl font-bold text-accent-800 mb-4">Edit Section</h2>
-        <form className="space-y-4">
-          <div>
-            <label htmlFor="Name" className="block text-sm font-medium text-accent-600">Name</label>
-            <input type="text" id="Name" name="Name" className="mt-1 block w-full rounded-md border-accent-200 shadow-sm focus:border-primary-500 focus:ring-primary-500" value={formData.Name} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="Description" className="block text-sm font-medium text-accent-600">Description</label>
-            <textarea id="Description" name="Description" className="mt-1 block w-full rounded-md border-accent-200 shadow-sm focus:border-primary-500 focus:ring-primary-500" value={formData.Description} onChange={handleChange} />
-          </div>
-          <div className="flex justify-end">
-            <button type="button" onClick={onClose} className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</button>
-            <button type="submit" onClick={handleSubmit} className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md mr-2">Edit</button>
-            {isAdmin && (
-              <button type="button" onClick={onDelete} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
-            )}
-          </div>
-        </form>
-      </motion.div>
-    </motion.div>
-  )
-}
+    <EditModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      onDelete={onDelete}
+      title="Edit Section"
+      subtitle="Update section information"
+      icon={sectionIcon}
+      fields={fields}
+      initialData={initialData}
+      submitText="Save Changes"
+      loading={loading}
+      allowDelete={true}
+    />
+  );
+};
 
 export default SectionSettings;

@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { getProduct } from '../utils/http/gets';
+import { getProduct } from '../utils/http/api';
 import Loading from '../components/Loading';
 import NotFound from '../components/NotFound';
 import GoBack from '../components/GoBack';

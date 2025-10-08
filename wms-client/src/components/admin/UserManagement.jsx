@@ -9,8 +9,13 @@ import {
   Eye,
   Lock,
   Unlock,
+  Users,
+  UserCheck,
+  UserX,
+  Shield
 } from "lucide-react";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
+import StatsGrid from "../shared/StatsGrid";
 
 const UserManagement = ({
   users,
@@ -21,6 +26,51 @@ const UserManagement = ({
   handleToggleUserStatus,
   handleDeleteUser,
 }) => {
+  const userStats = [
+    {
+      key: 'total',
+      title: 'Total',
+      value: stats.totalUsers,
+      icon: <Users className="w-6 h-6" />,
+      color: 'blue'
+    },
+    {
+      key: 'active',
+      title: 'Active',
+      value: stats.activeUsers,
+      icon: <UserCheck className="w-6 h-6" />,
+      color: 'green'
+    },
+    {
+      key: 'inactive',
+      title: 'Inactive',
+      value: stats.inactiveUsers,
+      icon: <UserX className="w-6 h-6" />,
+      color: 'red'
+    },
+    {
+      key: 'admins',
+      title: 'Admins',
+      value: stats.adminUsers,
+      icon: <Crown className="w-6 h-6" />,
+      color: 'red'
+    },
+    {
+      key: 'managers',
+      title: 'Managers',
+      value: stats.managerUsers,
+      icon: <Shield className="w-6 h-6" />,
+      color: 'blue'
+    },
+    {
+      key: 'employees',
+      title: 'Employees',
+      value: stats.employeeUsers,
+      icon: <Users className="w-6 h-6" />,
+      color: 'green'
+    }
+  ];
+
   return (
     <motion.div
       key="users"
@@ -61,44 +111,7 @@ const UserManagement = ({
 
       {/* User Statistics */}
       <div className="p-6 border-b border-gray-200">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {stats.totalUsers}
-            </div>
-            <div className="text-sm text-gray-600">Total</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {stats.activeUsers}
-            </div>
-            <div className="text-sm text-gray-600">Active</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-red-600">
-              {stats.inactiveUsers}
-            </div>
-            <div className="text-sm text-gray-600">Inactive</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-red-600">
-              {stats.adminUsers}
-            </div>
-            <div className="text-sm text-gray-600">Admins</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {stats.managerUsers}
-            </div>
-            <div className="text-sm text-gray-600">Managers</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {stats.employeeUsers}
-            </div>
-            <div className="text-sm text-gray-600">Employees</div>
-          </div>
-        </div>
+        <StatsGrid stats={userStats} />
       </div>
 
       <div className="p-6">

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getSection } from '../utils/http/gets';
+import { getSection } from '../utils/http/api';
 import SectionOverview from '../components/section/SectionOverview';
 import Loading from '../components/Loading';
 import GoBack from '../components/GoBack';

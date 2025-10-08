@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getItem } from '../utils/http/gets';
+import { getItem } from '../utils/http/api';
 
 const Item = () => {
   const { id } = useParams();

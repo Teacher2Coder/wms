@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../contexts/AuthContext";
 import { User, Edit3, Key, Calendar, Shield } from "lucide-react";
-import { getUserActions, getUser } from "../utils/http/gets";
+import { getUserActions, getUser } from "../utils/http/api";
 import Actions from "../components/admin/Actions";
 import Loading from "../components/Loading";
 import NotFound from "../components/NotFound";

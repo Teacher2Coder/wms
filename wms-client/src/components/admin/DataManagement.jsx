@@ -6,6 +6,7 @@ import {
   Download,
   Upload,
 } from "lucide-react";
+import AdminSection from "../shared/AdminSection";
 
 const DataManagement = () => {
   return (
@@ -16,11 +17,10 @@ const DataManagement = () => {
       exit={{ opacity: 0, y: -20 }}
       className="space-y-6"
     >
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
-          Data Management
-        </h2>
-
+      <AdminSection
+        title="Data Management"
+        subtitle="Backup, restore, and database maintenance operations"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900">
@@ -64,7 +64,7 @@ const DataManagement = () => {
             </p>
           </div>
         </div>
-      </div>
+      </AdminSection>
     </motion.div>
   );
 };

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
 import WarehouseCards from '../components/home/WarehouseCards';
 import Overview from '../components/home/Overview';
-import { getWarehouses } from '../utils/http/gets';
+import { getWarehouses } from '../utils/http/api';
 
 const Home = () => {
 

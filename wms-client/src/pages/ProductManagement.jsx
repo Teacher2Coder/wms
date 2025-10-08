@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { getAllProducts } from '../utils/http/gets';
+import { getAllProducts } from '../utils/http/api';
 import Loading from '../components/Loading';
 import ProductsOverview from '../components/product-manage/ProductsOverview';
 import ProductList from '../components/product-manage/ProductList';

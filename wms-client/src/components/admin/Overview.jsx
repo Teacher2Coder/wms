@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { CheckCircle, Globe } from "lucide-react";
 import Actions from "./Actions";
+import AdminCard from "../shared/AdminCard";
+import AdminSection from "../shared/AdminSection";
 import handleSmoothScroll from "../../utils/handleSmoothScroll";
 
 const Overview = ({ overviewCards, quickActions, stats, actions }) => {
@@ -21,30 +23,28 @@ const Overview = ({ overviewCards, quickActions, stats, actions }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
-            onClick={card.action}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-lg ${card.color}`}>
-                <card.icon className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-gray-900">
-                {card.count}
-              </span>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {card.title}
-            </h3>
-            <p className="text-gray-600 text-sm">{card.description}</p>
+            <AdminCard
+              title={card.title}
+              value={card.count}
+              subtitle={card.description}
+              icon={<card.icon className="h-6 w-6" />}
+              color={card.color?.includes('blue') ? 'blue' : 
+                    card.color?.includes('green') ? 'green' : 
+                    card.color?.includes('red') ? 'red' : 
+                    card.color?.includes('purple') ? 'purple' : 'blue'}
+              onClick={card.action}
+              variant="simple"
+            />
           </motion.div>
         ))}
       </div>
 
       {/* Quick Actions */}
-      <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
-          Administrative Actions
-        </h2>
+      <AdminSection
+        title="Administrative Actions"
+        subtitle="Quick access to common administrative tasks"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action, index) => (
             <motion.div
@@ -57,40 +57,42 @@ const Overview = ({ overviewCards, quickActions, stats, actions }) => {
                 <Link
                   to={action.link}
                   onClick={() => handleSmoothScroll()}
-                  className="block bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                  className="block"
                 >
-                  <div className={`p-2 rounded-lg ${action.color} w-fit mb-3`}>
-                    <action.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">
-                    {action.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm">{action.description}</p>
+                  <AdminCard
+                    title={action.title}
+                    subtitle={action.description}
+                    icon={<action.icon className="h-5 w-5" />}
+                    color={action.color?.includes('blue') ? 'blue' : 
+                          action.color?.includes('green') ? 'green' : 
+                          action.color?.includes('red') ? 'red' : 
+                          action.color?.includes('purple') ? 'purple' : 'blue'}
+                    variant="simple"
+                  />
                 </Link>
               ) : (
-                <button
+                <AdminCard
+                  title={action.title}
+                  subtitle={action.description}
+                  icon={<action.icon className="h-5 w-5" />}
+                  color={action.color?.includes('blue') ? 'blue' : 
+                        action.color?.includes('green') ? 'green' : 
+                        action.color?.includes('red') ? 'red' : 
+                        action.color?.includes('purple') ? 'purple' : 'blue'}
                   onClick={action.action}
-                  className="w-full text-left bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className={`p-2 rounded-lg ${action.color} w-fit mb-3`}>
-                    <action.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">
-                    {action.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm">{action.description}</p>
-                </button>
+                  variant="simple"
+                />
               )}
             </motion.div>
           ))}
         </div>
-      </div>
+      </AdminSection>
 
       {/* System Status */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">
-          System Status
-        </h2>
+      <AdminSection
+        title="System Status"
+        subtitle="Current system health and connectivity"
+      >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
             <CheckCircle className="h-8 w-8 text-green-600" />
@@ -114,7 +116,7 @@ const Overview = ({ overviewCards, quickActions, stats, actions }) => {
             </div>
           </div>
         </div>
-      </div>
+      </AdminSection>
 
       <Actions actions={actions} />
     </motion.div>
